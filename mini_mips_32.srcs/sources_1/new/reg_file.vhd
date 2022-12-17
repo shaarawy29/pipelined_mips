@@ -52,30 +52,40 @@ end reg_file;
 
 architecture Behavioral of reg_file is
 
-type reg_file is array (0 to 31) of std_logic_vector(31 downto 0);
-shared variable reg_file1 : reg_file  := (others => X"00000000");
+    type reg_file is array (0 to 31) of std_logic_vector(31 downto 0);
+    shared variable reg_file1 : reg_file  := (others => X"00000000");
+    signal clk : std_logic;
 
 begin
 
-process(nclk) 
-    begin 
-       if ( nclk'event and nclk = '1') then
-            RD1 <= reg_file1(to_integer(unsigned(RA1)));
-            RD2 <= reg_file1(to_integer(unsigned(RA2)));
-            RD3 <= reg_file1(to_integer(unsigned(RA3)));
-            if(WE = '1') then
-               reg_file1(to_integer(unsigned(WA))) := WD; 
-            end if;
-            if (RA1 = "00000") then 
-                RD1 <= X"00000000";
-            end if;
-            if (RA2 = "00000") then 
-                RD2 <= X"00000000";
-            end if;
-            if (RA3 = "00000") then 
-                RD3 <= X"00000000";
-            end if;
-       end if; 
+    clk <= not nclk;
+    
+    process(nclk) 
+        begin 
+            if (nclk'event and nclk = '1') then
+                RD1 <= reg_file1(to_integer(unsigned(RA1)));
+                RD2 <= reg_file1(to_integer(unsigned(RA2)));
+                RD3 <= reg_file1(to_integer(unsigned(RA3)));
+                if (RA1 = "00000") then 
+                    RD1 <= X"00000000";
+                end if;
+                if (RA2 = "00000") then 
+                    RD2 <= X"00000000";
+                end if;
+                if (RA3 = "00000") then 
+                    RD3 <= X"00000000";
+                end if;
+            end if; 
     end process;
-
+    
+    process(clk)
+    
+        begin 
+            if (clk'event and clk = '1') then 
+                if(WE = '1') then
+                    reg_file1(to_integer(unsigned(WA))) := WD; 
+                end if;
+            end if;
+    end process;
+    
 end Behavioral;
