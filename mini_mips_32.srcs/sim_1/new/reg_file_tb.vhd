@@ -56,23 +56,24 @@ signal RA1, RA2, RA3, WA : std_logic_vector(4 downto 0) := "00000";
 
 begin
 
-uut: reg_file port map(nclk, WE, RA1, RA2, RA3, WA, WD, RD1, RD2, RD3);
-nclk <= not clk;
+    uut: reg_file port map(nclk, WE, RA1, RA2, RA3, WA, WD, RD1, RD2, RD3);
+    nclk <= not clk;
 
 process
+
     begin
         clk <= '0'; wait for 2ns;
         clk <= '1'; wait for 2ns;
-end process;
+    end process;
 
-process
-    begin 
-        WE <= '1'; WA <= "00001"; WD <= X"00000001"; wait for 4ns;
-        WE <= '1'; WA <= "00010"; WD <= X"0000000A"; wait for 4ns;
-        WE <= '1'; WA <= "00011"; WD <= X"0000000F"; wait for 4ns;
-        WE <= '0'; RA1 <= "00000"; RA2 <= "00001"; RA3 <= "00010"; wait for 4ns;
-        RA1 <= "00011"; wait;
+    process
+        begin 
+            WE <= '1'; WA <= "00001"; WD <= X"00000001"; wait for 4ns;
+            WE <= '1'; WA <= "00010"; WD <= X"0000000A"; wait for 4ns;
+            WE <= '1'; WA <= "00011"; WD <= X"0000000F"; wait for 4ns;
+            WE <= '0'; RA1 <= "00000"; RA2 <= "00001"; RA3 <= "00010"; wait for 4ns;
+            RA1 <= "00011"; wait;
         
-end process;
+    end process;
 
 end Behavioral;
