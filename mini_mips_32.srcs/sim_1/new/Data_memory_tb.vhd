@@ -33,8 +33,5 @@ begin
     write_enable <= '1' ; address(1 downto 0) <= "01"  ; WD(1 downto 0) <= "01"; wait for 2ns;  
     write_enable <= '0' ; address(1 downto 0) <= "01"  ; WD(1 downto 0) <= "01"; wait for 2ns;
     write_enable <= '0' ; address(1 downto 0) <= "10"  ; WD(1 downto 0) <= "01"; wait;
-    --write_enable <= '1' ; address(1 downto 0) <= "01" ; WD(1 downto 0) <= "00"; wait; 
-    --write_enable <= '1' ; address(1 downto 0) <= "01"  ; WD(1 downto 0) <= "11"; wait for 2ns;
-    --write_enable <= '0' ; address(1 downto 0) <= "01" ; WD(1 downto 0) <= "00"; wait; 
 end process;
 end Behavioral;

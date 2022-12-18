@@ -53,7 +53,7 @@ end reg_file;
 architecture Behavioral of reg_file is
 
     type reg_file is array (0 to 31) of std_logic_vector(31 downto 0);
-    shared variable reg_file1 : reg_file  := (others => X"00000000");
+    signal reg_file1 : reg_file  := (others => X"00000000");
     signal clk : std_logic;
 
 begin
@@ -83,7 +83,7 @@ begin
         begin 
             if (clk'event and clk = '1') then 
                 if(WE = '1') then
-                    reg_file1(to_integer(unsigned(WA))) := WD; 
+                    reg_file1(to_integer(unsigned(WA))) <= WD; 
                 end if;
             end if;
     end process;

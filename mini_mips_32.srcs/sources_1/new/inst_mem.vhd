@@ -42,7 +42,7 @@ end inst_mem;
 architecture Behavioral of inst_mem is
 
     type mem is array (0 to 31) of std_logic_vector(31 downto 0);
-    shared variable rom_block : mem  := (others => X"00000000");
+    signal rom_block : mem  := (others => X"00000000");
 
 begin
     
@@ -50,7 +50,7 @@ begin
     
     process
         file f : TEXT;
-        constant filename: string :="D:\vivado_proj\mini_mips_32\program.txt";
+        constant filename: string := "D:\vivado_proj\mini_mips_32\program.txt";
         variable l : line;
         variable i : integer := 0;
         variable b : std_logic_vector(31 downto 0);
@@ -62,7 +62,7 @@ begin
                 readline(f,l);
                 next when l(1) = '#';
                 read(l,b);
-                rom_block(i) := b;
+                rom_block(i) <= b;
                 i := i+1;
             end loop;
             file_close(f);
