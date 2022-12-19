@@ -21,45 +21,45 @@
 
 
 library IEEE;
-    use IEEE.STD_LOGIC_1164.all;
+use IEEE.STD_LOGIC_1164.all;
 use IEEE.NUMERIC_STD.ALL;
 use ieee.std_logic_unsigned.all;
 
 
 
 entity ALU_Unit is
-   Port (in1,in2,in3: in std_logic_vector(31 downto 0);out1:out std_logic_vector(31 downto 0);cout:out std_logic ;sel:in std_logic_vector(2 downto 0));
+   Port (SrcA, SrcB,SrcC : in std_logic_vector(31 downto 0);
+         ALU_out : out std_logic_vector(31 downto 0);
+         ALU_sel : in std_logic_vector(2 downto 0));
 end ALU_Unit;
 
 architecture Behavioral of ALU_Unit is
-signal w1,w2,w3:std_logic_vector(31 downto 0);
-signal tmp: std_logic_vector(8 downto 0);
-begin
-process (in1,in2,in3,sel)
-variable OANN: std_logic_vector(63 downto 0);
 
-begin 
-if(sel="000") then
-    out1 <=in1 + in2;
-    tmp <= '0'&in1+'0'&in2;
-    cout<= tmp(8);
-  --out1 <= "00000000000000000000000000000000000000000000000000000000000000001";
-  --out1 <= (others => '0');
-elsif(sel="001") then
-    out1<=in1 - in2;
-    --out1 <= (others => '1');
-elsif (sel="010") then 
-    out1<= in1 and in2;
-elsif (sel="011") then
-    out1<= in1 or in2;
-elsif (sel="100") then  --weight
-    w1<=in1; 
-    w2<=in2; 
-    w3<=in3; 
-end if;
---elsif (sel="101") then   --ANN
---    OANN:=w1*in1+w2*in2;
---    out1<=OANN+OANN*w3;
---end if;
-end process;
+    signal W1, W2, W3:std_logic_vector(31 downto 0);
+    signal tmp: std_logic_vector(31 downto 0);
+
+begin
+    process (SrcA, SrcB, SrcC, ALU_sel)
+    begin 
+        case ALU_sel is 
+            when "000" => 
+                ALU_out <= SrcA + SrcB; -- addition used in ADD, ADDI, LW, SW
+            when "001" =>
+                ALU_out <= SrcA - SrcB; -- subtraction used in SUB, SUBI
+            when "010" =>
+                ALU_out <= SrcA and SrcB; -- AND operation 
+            when "011" =>
+                ALU_out <= SrcA or SrcB; -- OR operation
+            when "100" => -- weight instruction to update W1, W2, W3
+                W1 <= SrcA;
+                W2 <= SrcB;
+                W3 <= SrcC;
+            when "101" => -- ANN instruction to use the feedback tmp 
+                ALU_out <= W1*SrcA + W2*SrcB + W3*tmp;
+                tmp <= W1*SrcA + W2*SrcB + W3*tmp;
+            when others => -- in case of undefiend signal is in 
+                ALU_out <= (others => 'X');
+        end case;
+        
+    end process;
 end Behavioral;
