@@ -57,29 +57,35 @@ architecture Behavioral of hazard_unit is
     signal Stall : std_logic := '0';    
 
 begin
-
+    
+    -- stall when there is lw inst followed by an inst using this data 
+    -- first check if the mem stage are going to write in reg, and if the address is the same as the ALU srcA wants
     Stall <= '1' when RegWriteM = '1' and MemtoRegM = '1' and WriteRegM = RsE else
-             '1' when RegWriteM = '1' and MemtoRegm = '1' and WriteRegM = RtE and ALUSrcE = '0' else
-             '1' when RegWriteM = '1' and MemtoRegM = '1' and WriteRegM = RdE and AlUControlE = "100" else
+             '1' when RegWriteM = '1' and MemtoRegm = '1' and WriteRegM = RtE and ALUSrcE = '0' else -- check for the target register, same as rs except that we also check that it is going to be read not write in
+             '1' when RegWriteM = '1' and MemtoRegM = '1' and WriteRegM = RdE and AlUControlE = "100" else -- check for the third operad, which is only used in case of weight inst
              '0';
-             
+     -- to stall the first three stages thus no new instruction enter the pipeline        
     StallF <= Stall;
     StallD <= Stall;
     StallE <= Stall;
     
-    
+    -- forward unit for SRCA, if the mem stage write A take it from Mem, if not then if the wb stage write it then take it from there, if not then no hazard
+    -- as the write occurs in the fist half of the cycle and read occurs in the second half 
     ForwardAE <= "01" when RegWriteM = '1' and MemtoRegM = '0' and WriteRegM = RsE else
                  "10" when RegWriteW = '1' and WriteRegW = RsE else
                  "00";
-                 
+    
+    -- same logic here as SRCA except that we make extra check that this reg is going to be read              
     ForwardBE <= "01" when RegWriteM = '1' and MemtoRegM = '0' and WriteRegM = RtE and ALUSrcE = '0' else
                  "10" when RegWriteW = '1' and WriteRegW = RtE and ALUSrcE = '0' else
                  "00";
     
+    -- same logic as SRCA, but here we only use RDC in case weight inst, thus to check if we are going to use it
     ForwardCE <= "01" when RegWriteM = '1' and MemtoRegM = '0' and WriteRegM = RdE and ALUControlE = "100" else
                  "10" when RegWriteW = '1' and WriteRegW = RdE and ALUControlE = "100" else
                  "00";
-                 
+     
+     -- if there is branch then no way to solve it except flush the false inst entered the pipeline            
     FlushE <= '1' when BranchD = '1' else '0';
     
 end Behavioral;
