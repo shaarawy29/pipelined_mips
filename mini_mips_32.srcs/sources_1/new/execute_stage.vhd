@@ -103,19 +103,19 @@ begin
     WriteRegE <= RtE when RegDstE = '0' else
                  RdE;
                  
-   SrcAE <= ALUOutM when forwardAE = "01" else
-            ResultW when forwardAE = "10" else
+   SrcAE <= ALUOutM when forwardAE = "10" else
+            ResultW when forwardAE = "01" else
             RD1E;
             
-   operandB <= ALUOutM when forwardBE = "01" else
-               ResultW when forwardBE = "10" else
+   operandB <= ALUOutM when forwardBE = "10" else
+               ResultW when forwardBE = "01" else
                RD2E;
             
    SrcBE <= operandB when ALUSrcE = '0' else
             SignImmE;
             
-   SrcCE <= ALUOutM when forwardCE = "01" else
-            ResultW when forwardCE = "10" else
+   SrcCE <= ALUOutM when forwardCE = "10" else
+            ResultW when forwardCE = "01" else
             RD3E;
             
    WriteDataE <= operandB;

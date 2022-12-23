@@ -38,7 +38,7 @@ use IEEE.std_logic_textio.all;
 --use UNISIM.VComponents.all;
 
 entity reg_file is
-    Port ( nclk : in STD_LOGIC; -- negative clk, it is triggered at the negative edge of the clk
+    Port ( clk : in STD_LOGIC; -- negative clk, it is triggered at the negative edge of the clk
            WE : in STD_LOGIC; -- write enable pin, to enable write in the WA register 
            RA1 : in STD_LOGIC_VECTOR (4 downto 0); -- address of the first operand, source register 
            RA2 : in STD_LOGIC_VECTOR (4 downto 0); -- address of the second operand, target register 
@@ -54,11 +54,11 @@ architecture Behavioral of reg_file is
 
     type reg_file is array (0 to 31) of std_logic_vector(31 downto 0);
     signal reg_file1 : reg_file  := (others => X"00000000");
-    signal clk : std_logic;
+    signal nclk : std_logic;
 
 begin
 
-    clk <= not nclk;
+    nclk <= not clk;
     
     process(nclk) 
         begin 
