@@ -35,7 +35,7 @@ use std.textio.all;
 --use UNISIM.VComponents.all;
 
 entity inst_mem is
-    Port ( A : in STD_LOGIC_VECTOR (4 downto 0);
+    Port ( A : in STD_LOGIC_VECTOR (31 downto 0);
            inst : out STD_LOGIC_VECTOR (31 downto 0));
 end inst_mem;
 

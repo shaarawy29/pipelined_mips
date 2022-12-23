@@ -4,11 +4,13 @@ use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
 use IEEE.numeric_std.all;   
 --use std.textio.all;
-use IEEE.std_logic_textio.all;
+use ieee.std_logic_textio.all;
+use std.textio.all;
+
 
 entity Data_memory is
-  Port (clk,WE : in std_logic; 
-        A : std_logic_vector(4 downto 0);
+  Port (nclk,WE : in std_logic; 
+        A : in std_logic_vector(31 downto 0);
         WD :in std_logic_vector(31 downto 0);
         RD : out std_logic_vector(31 downto 0));
 end Data_memory;
@@ -19,9 +21,33 @@ architecture Behavioral of Data_memory is
     signal ram_block : mem := (others=>(others=>'0'));
 
 begin
-    process(clk)
+
+     process
+        file f : TEXT;
+        constant filename: string := "D:\vivado_proj\mini_mips_32\data.txt";
+        variable l : line;
+        variable i : integer := 0;
+        variable b : std_logic_vector(31 downto 0);
+        variable startup : boolean := true;
     begin
-            if(rising_edge(clk)) then
+        if(startup = true)then
+            file_open(f,filename,read_mode);
+            while((i <= 31) and (not endfile(f)))loop
+                readline(f,l);
+                next when l(1) = '#';
+                read(l,b);
+                ram_block(i) <= b;
+                i := i+1;
+            end loop;
+            file_close(f);
+            startup := false;
+        end if;
+        wait;
+    end process;
+    
+    process(nclk)
+    begin
+            if(rising_edge(nclk)) then
                 if(WE = '1') then
                     ram_block(to_integer(unsigned(A))) <= WD;     
                 else    
