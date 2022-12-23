@@ -47,6 +47,7 @@ entity hazard_unit is
            StallD : out STD_LOGIC;
            StallE : out STD_LOGIC;
            FlushE : out STD_LOGIC;
+           FlushM : out STD_LOGIC;
            ForwardAE : out STD_LOGIC_VECTOR (1 downto 0);
            ForwardBE : out STD_LOGIC_VECTOR (1 downto 0);
            ForwardCE : out STD_LOGIC_VECTOR (1 downto 0));
@@ -68,6 +69,8 @@ begin
     StallF <= Stall;
     StallD <= Stall;
     StallE <= Stall;
+    FlushM <= Stall;
+    
     
     -- forward unit for SRCA, if the mem stage write A take it from Mem, if not then if the wb stage write it then take it from there, if not then no hazard
     -- as the write occurs in the fist half of the cycle and read occurs in the second half 

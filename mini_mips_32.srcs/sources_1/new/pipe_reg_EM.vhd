@@ -33,6 +33,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity pipe_reg_EM is
     Port ( clk : in std_logic;
+           CLR : in STD_LOGIC;
            RegWriteE : in STD_LOGIC;
            MemtoRegE : in STD_LOGIC;
            MemWriteE : in STD_LOGIC;
@@ -56,12 +57,21 @@ begin
         begin 
             
             if(clk'event and clk = '1') then 
-                RegWriteM <= RegWriteE;
-                MemtoRegM <= MemtoRegE;
-                MemWriteM <= MemWriteE;
-                ALUOutM <= ALUOutE;
-                WriteDataM <= WriteDataE;
-                WriteRegM <= WriteRegE;
+                if(CLR = '1') then
+                    RegWriteM <= '0';
+                    MemtoRegM <= '0';
+                    MemWriteM <= '0';
+                    ALUOutM <= (others => '0');
+                    WriteDataM <= (others => '0');
+                    WriteRegM <= (others => '0');
+                else 
+                    RegWriteM <= RegWriteE;
+                    MemtoRegM <= MemtoRegE;
+                    MemWriteM <= MemWriteE;
+                    ALUOutM <= ALUOutE;
+                    WriteDataM <= WriteDataE;
+                    WriteRegM <= WriteRegE;
+                end if;
             end if;
             
     end process;

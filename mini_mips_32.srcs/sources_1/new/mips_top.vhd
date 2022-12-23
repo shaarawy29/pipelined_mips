@@ -89,6 +89,50 @@ architecture Behavioral of mips_top is
                RD3 : out STD_LOGIC_VECTOR (31 downto 0)); -- Read data 3, the data stored in the RA3, destination reg, it is only used in case of weight Inst
     end component;
     
+    component sign_Extend is 
+        Port (in1 : in std_logic_vector(15 downto 0);
+              out1 : out std_logic_vector(31 downto 0));
+    end component;
+    
+    component pipe_reg_DE is 
+        Port ( clk : in std_logic;
+               CLR : in STD_LOGIC;
+               nEN : in std_logic;
+               Reg_WriteD : in STD_LOGIC;
+               MemtoRegD : in STD_LOGIC;
+               MemWriteD : in STD_LOGIC;
+               ALUControlD : in STD_LOGIC_VECTOR(2 downto 0);
+               ALUSrcD : in STD_LOGIC;
+               RegDstD : in STD_LOGIC;
+               RD1D : in STD_LOGIC_VECTOR (31 downto 0);
+               RD2D : in STD_LOGIC_VECTOR (31 downto 0);
+               RD3D : in STD_LOGIC_VECTOR (31 downto 0);
+               RsD : in STD_LOGIC_VECTOR (4 downto 0);
+               RtD : in STD_LOGIC_VECTOR (4 downto 0);
+               RdD : in STD_LOGIC_VECTOR (4 downto 0);
+               SignImmD : in STD_LOGIC_VECTOR (31 downto 0);
+               Reg_WriteE : out STD_LOGIC;
+               MemtoRegE : out STD_LOGIC;
+               MemWriteE : out STD_LOGIC;
+               ALUControlE : out STD_LOGIC_VECTOR( 2 downto 0);
+               ALUSrcE : out STD_LOGIC;
+               RegDstE : out STD_LOGIC;
+               RD1E : out STD_LOGIC_VECTOR (31 downto 0);
+               RD2E : out STD_LOGIC_VECTOR (31 downto 0);
+               RD3E : out STD_LOGIC_VECTOR (31 downto 0);
+               RsE : out STD_LOGIC_VECTOR (4 downto 0);
+               RtE : out STD_LOGIC_VECTOR (4 downto 0);
+               RdE : out STD_LOGIC_VECTOR (4 downto 0);
+               SignImmE : out STD_LOGIC_VECTOR (31 downto 0));
+    end component;
+    
+    component ALU_Unit is 
+        Port (SrcA, SrcB,SrcC : in std_logic_vector(31 downto 0);
+              ALU_out : out std_logic_vector(31 downto 0);
+              ALU_sel : in std_logic_vector(2 downto 0));
+    end component;
+    
+      
     
     -- signal in the fethc stage
 
