@@ -27,8 +27,8 @@ use IEEE.NUMERIC_STD.ALL;
 
 -- Uncomment the following library declaration if instantiating
 -- any Xilinx leaf cells in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
+library UNISIM;
+use UNISIM.VComponents.all;
 
 entity decode_stage is
  Port (clk:in std_logic;
@@ -49,6 +49,7 @@ entity decode_stage is
        RDE: out std_logic_vector(4 downto 0);
        SignImmE: out std_logic_vector(31 downto 0);
        PCBranchD: out std_logic_vector( 31 downto 0);
+       BranchD : inout std_logic;
        RegWriteE : out STD_LOGIC;
        MemtoRegE : out STD_LOGIC;
        MemWriteE : out STD_LOGIC;
@@ -131,17 +132,18 @@ Signal MemWriteD :  std_logic;
 Signal ALUControlD :  std_logic_vector (2 downto 0);
 Signal ALUSrcD :  std_logic;
 Signal RegDstD :  std_logic;
-Signal BranchD :  std_logic;
+--Signal BranchD :  std_logic;
 Signal RD12: std_logic_vector(31 downto 0);
 Signal RD22: std_logic_vector(31 downto 0);
 Signal RD32: std_logic_vector(31 downto 0);
 Signal EqualID: std_logic;
-Signal RSD :std_logic_vector (4 downto 0):=InstrD(25 downto 21);
-Signal opcode :std_logic_vector (4 downto 0):=InstrD(31 downto 26);
-Signal RTD :std_logic_vector (4 downto 0):=InstrD(20 downto 16);
-Signal RDD :std_logic_vector (4 downto 0):=InstrD(15 downto 11);
-Signal SignExt :std_logic_vector (15 downto 0):=InstrD(15 downto 0);
+Signal RSD :std_logic_vector (4 downto 0):= InstrD(25 downto 21);
+Signal opcode :std_logic_vector (4 downto 0):= InstrD(31 downto 26);
+Signal RTD :std_logic_vector (4 downto 0):= InstrD(20 downto 16);
+Signal RDD :std_logic_vector (4 downto 0):= InstrD(15 downto 11);
+Signal SignExt :std_logic_vector (15 downto 0):= InstrD(15 downto 0);
 Signal SignImmD: std_logic_vector(31 downto 0);
+Signal zeros : std_logic_vector(31 downto 0) := X"00000000";
 
 
 begin
@@ -154,7 +156,9 @@ PipeReg: pipe_reg_DE port map ( clk,CLR,nEN,RegWriteD,MemtoRegD,MemWriteD,ALUCon
                                 RegWriteE,MemtoRegE,MemWriteE,ALUControlE,ALUSrcE,RegDstE,RD1E,RD2E,RD3E,RSE,RTE,RDE,SignImmE);
 
 
-PCSrcD <= ( BranchD and(RD12 === X"00000000")); 
+--PCSrcD <= ( BranchD and (RD12 = zeros));
+PCSrcD <= '1' when (BranchD = '1' and (RD12 = zeros)) else '0'; 
+
 -- RD12 is EqualID on the drawing
 --PCSrcD<=BranchD and ;
 --pipe: pipe_reg_DE port map (clk,CLR,nEN,RegWriteD,MemtoRegD,MemWriteD,ALUControlD,ALUSrcD,RegDstD,RD12,RD22,RD32,RS,RT,RD,signImmD,RegWriteE,MemtoRegE,MemWriteE,ALUControlE,ALUSrcE,RegDstE);
