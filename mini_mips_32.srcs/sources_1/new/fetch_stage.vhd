@@ -13,7 +13,7 @@ end fetch_stage;
 
 architecture Behavioral of fetch_stage is
     component inst_mem is
-        Port ( A : in STD_LOGIC_VECTOR (4 downto 0);
+        Port ( A : in STD_LOGIC_VECTOR (31 downto 0);
                inst : out STD_LOGIC_VECTOR (31 downto 0));
     end component;
 
@@ -32,12 +32,12 @@ architecture Behavioral of fetch_stage is
     
     component pipe_reg_FD is
         Port ( instF : in STD_LOGIC_VECTOR (31 downto 0);
-               PCplus1F : in STD_LOGIC_VECTOR (4 downto 0);
+               PCplus1F : in STD_LOGIC_VECTOR (31 downto 0);
                clk : in STD_LOGIC;
                CLR : in STD_LOGIC;
                nEN : in STD_LOGIC;
                instD : out STD_LOGIC_VECTOR (31 downto 0);
-               PCplus1D : out STD_LOGIC_VECTOR (4 downto 0));
+               PCplus1D : out STD_LOGIC_VECTOR (31 downto 0));
     end component;
 
     signal PC : std_logic_vector(31 downto 0);
@@ -50,6 +50,6 @@ begin
           PCBranchD; 
     PCREG: generic_reg generic map (32) port map (clk , StallF , PC , PCF);
     PCAdder: Adder port map (PCF , X"00000001", PCPlus1F);
-    ROM: inst_mem port map (PCF(4 downto 0),instF);
+    ROM: inst_mem port map (PCF, instF);
     FDReg: pipe_reg_FD port map (instF, PCPlus1F, clk, PCSrcD,StallD , instD , PCPlus1D); 
 end Behavioral;

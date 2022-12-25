@@ -67,13 +67,13 @@ end component;
 
 Component control_unit is
     Port ( opcode : in STD_LOGIC_VECTOR (5 downto 0);
-           RegWriteD : out STD_logic;
-           MemtoRegD : out std_logic;
-           MemWriteD : out std_logic;
-           ALUControlD : out std_logic_vector (2 downto 0);
-           ALUSrcD : out std_logic;
-           RegDstD : out std_logic;
-           BranchD : out std_logic);
+           RegWrite : out STD_logic;
+           MemtoReg : out std_logic;
+           MemWrite : out std_logic;
+           ALUControl : out std_logic_vector (2 downto 0);
+           ALUSrc : out std_logic;
+           RegDst : out std_logic;
+           Branch : out std_logic);
 end Component;
 
 Component pipe_reg_DE is
@@ -109,7 +109,7 @@ Component pipe_reg_DE is
 end component;
 
 Component reg_file is
-    Port ( nclk : in STD_LOGIC; -- negative clk, it is triggered at the negative edge of the clk
+    Port ( clk : in STD_LOGIC; -- negative clk, it is triggered at the negative edge of the clk
            WE : in STD_LOGIC; -- write enable pin, to enable write in the WA register 
            RA1 : in STD_LOGIC_VECTOR (4 downto 0); -- address of the first operand, source register 
            RA2 : in STD_LOGIC_VECTOR (4 downto 0); -- address of the second operand, target register 
@@ -122,7 +122,8 @@ Component reg_file is
 end Component;
 
 component sign_Extend is
-  Port (in1:in std_logic_vector(4 downto 0);out1: out std_logic_vector(31 downto 0));
+  Port (in1:in std_logic_vector(15 downto 0);
+        out1: out std_logic_vector(31 downto 0));
 end component;
 
 
@@ -138,7 +139,7 @@ Signal RD22: std_logic_vector(31 downto 0);
 Signal RD32: std_logic_vector(31 downto 0);
 Signal EqualID: std_logic;
 Signal RSD :std_logic_vector (4 downto 0):= InstrD(25 downto 21);
-Signal opcode :std_logic_vector (4 downto 0):= InstrD(31 downto 26);
+Signal opcode :std_logic_vector (5 downto 0):= InstrD(31 downto 26);
 Signal RTD :std_logic_vector (4 downto 0):= InstrD(20 downto 16);
 Signal RDD :std_logic_vector (4 downto 0):= InstrD(15 downto 11);
 Signal SignExt :std_logic_vector (15 downto 0):= InstrD(15 downto 0);

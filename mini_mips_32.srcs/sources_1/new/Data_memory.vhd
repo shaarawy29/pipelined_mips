@@ -9,7 +9,7 @@ use std.textio.all;
 
 
 entity Data_memory is
-  Port (nclk,WE : in std_logic; 
+  Port (clk,WE : in std_logic; 
         A : in std_logic_vector(31 downto 0);
         WD :in std_logic_vector(31 downto 0);
         RD : out std_logic_vector(31 downto 0));
@@ -45,9 +45,9 @@ begin
         wait;
     end process;
     
-    process(nclk)
+    process(clk)
     begin
-            if(rising_edge(nclk)) then
+            if(falling_edge(clk)) then
                 if(WE = '1') then
                     ram_block(to_integer(unsigned(A))) <= WD;     
                 else    

@@ -49,7 +49,7 @@ end mem_stage;
 architecture Behavioral of mem_stage is
 
     component Data_memory is 
-        Port ( nclk,WE : in std_logic; 
+        Port ( clk,WE : in std_logic; 
                A : in std_logic_vector(31 downto 0);
                WD :in std_logic_vector(31 downto 0);
                RD : out std_logic_vector(31 downto 0));
@@ -76,7 +76,7 @@ begin
 
     nclk <= not clk;
     RAM: Data_memory port map (clk, MemWriteM, ALUOutM, WriteDataM, RD_internal);
-    reg: pipe_reg_MW port map (nclk, RegWriteM, MemtoRegM, RD_internal, ALUOutM,
+    reg: pipe_reg_MW port map (clk, RegWriteM, MemtoRegM, RD_internal, ALUOutM,
                                 WriteRegM, RegWriteW, MemtoRegW, ReadDataW, AlUOutW, WriteRegW);
 
 

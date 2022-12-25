@@ -33,12 +33,12 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity pipe_reg_FD is
     Port ( instF : in STD_LOGIC_VECTOR (31 downto 0);
-           PCplus1F : in STD_LOGIC_VECTOR (4 downto 0);
+           PCplus1F : in STD_LOGIC_VECTOR (31 downto 0);
            clk : in STD_LOGIC;
            CLR : in STD_LOGIC;
            nEN : in STD_LOGIC;
            instD : out STD_LOGIC_VECTOR (31 downto 0);
-           PCplus1D : out STD_LOGIC_VECTOR (4 downto 0));
+           PCplus1D : out STD_LOGIC_VECTOR (31 downto 0));
 end pipe_reg_FD;
 
 architecture Behavioral of pipe_reg_FD is

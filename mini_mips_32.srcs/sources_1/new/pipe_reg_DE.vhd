@@ -35,7 +35,7 @@ entity pipe_reg_DE is
     Port ( clk : in std_logic;
            CLR : in STD_LOGIC;
            nEN : in std_logic;
-           Reg_WriteD : in STD_LOGIC;
+           RegWriteD : in STD_LOGIC;
            MemtoRegD : in STD_LOGIC;
            MemWriteD : in STD_LOGIC;
            ALUControlD : in STD_LOGIC_VECTOR(2 downto 0);

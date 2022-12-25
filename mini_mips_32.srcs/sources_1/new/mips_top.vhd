@@ -32,7 +32,8 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity mips_top is
-    Port ( clk : in STD_LOGIC);
+    Port ( clk : in STD_LOGIC;
+           writeresult_out : out std_logic_vector(31 downto 0));
 end mips_top;
 
 architecture Behavioral of mips_top is
@@ -152,38 +153,38 @@ architecture Behavioral of mips_top is
     end component;
     
     -- fetch stage signals
-    signal PCBranchD : std_logic_vector(31 downto 0);
-    signal StallF: std_logic;
-    signal StallD:  std_logic;
-    signal PCSrcD : std_logic;
-    signal instD : std_logic_vector(31 downto 0);
-    signal PCPlus1D : std_logic_vector(31 downto 0);
+    signal PCBranchD : std_logic_vector(31 downto 0) := (others => '0');
+    signal StallF: std_logic := '0';
+    signal StallD:  std_logic := '0';
+    signal PCSrcD : std_logic := '0';
+    signal instD : std_logic_vector(31 downto 0) := (others => '0');
+    signal PCPlus1D : std_logic_vector(31 downto 0) := (others => '0');
     
     -- decode stage signals
-    signal CLR: std_logic;
-    signal nEN : std_logic;
-    signal InstrD : std_logic_vector(31 downto 0);
-    signal WA : std_logic_vector(4 downto 0);
-    signal WD : std_logic_vector(31 downto 0); 
+    signal CLR: std_logic := '0';
+    signal nEN : std_logic := '0';
+    signal InstrD : std_logic_vector(31 downto 0) := (others => '0');
+    signal WA : std_logic_vector(4 downto 0) := (others => '0');
+    signal WD : std_logic_vector(31 downto 0) := (others => '0'); 
     --signal PCPlus1D : std_logic_vector(31 downto 0);
-    signal WE : std_logic;
-    signal ResultW: std_logic_vector;
+    signal WE : std_logic := '0';
+    signal ResultW: std_logic_vector(31 downto 0) := (others => '0');
     --signal PCSrcD : std_logic;
-    signal RD1E : std_logic_vector(31 downto 0);
-    signal RD2E : std_logic_vector(31 downto 0);
-    signal RD3E : std_logic_vector(31 downto 0);
-    signal RSE : std_logic_vector(4 downto 0);
-    signal RTE : std_logic_vector(4 downto 0);
-    signal RDE : std_logic_vector(4 downto 0);
-    signal SignImmE : std_logic_vector(31 downto 0);
+    signal RD1E : std_logic_vector(31 downto 0) := (others => '0');
+    signal RD2E : std_logic_vector(31 downto 0) := (others => '0');
+    signal RD3E : std_logic_vector(31 downto 0) := (others => '0');
+    signal RSE : std_logic_vector(4 downto 0) := (others => '0');
+    signal RTE : std_logic_vector(4 downto 0) := (others => '0');
+    signal RDE : std_logic_vector(4 downto 0) := (others => '0');
+    signal SignImmE : std_logic_vector(31 downto 0) := (others => '0');
     --signal PCBranchD : std_logic_vector( 31 downto 0);
-    signal BranchD: std_logic;
-    signal RegWriteE : STD_LOGIC;
-    signal MemtoRegE : STD_LOGIC;
-    signal MemWriteE : STD_LOGIC;
-    signal ALUControlE : STD_LOGIC_VECTOR( 2 downto 0);
-    signal ALUSrcE : STD_LOGIC;
-    signal RegDstE : STD_LOGIC;
+    signal BranchD: std_logic := '0';
+    signal RegWriteE : STD_LOGIC := '0';
+    signal MemtoRegE : STD_LOGIC := '0';
+    signal MemWriteE : STD_LOGIC := '0';
+    signal ALUControlE : STD_LOGIC_VECTOR( 2 downto 0) := (others => '0');
+    signal ALUSrcE : STD_LOGIC := '0';
+    signal RegDstE : STD_LOGIC := '0';
     
     -- signal for the execute stage
     --signal RegWriteE : STD_LOGIC;
@@ -201,17 +202,17 @@ architecture Behavioral of mips_top is
     --signal SignImmE : STD_LOGIC_VECTOR (31 downto 0);
     --signal CLR : STD_LOGIC;
     --signal nEN : in STD_LOGIC;
-    signal forwardAE : std_logic_vector(1 downto 0);
-    signal forwardBE : std_logic_vector(1 downto 0);
-    signal forwardCE : std_logic_vector(1 downto 0);
+    signal forwardAE : std_logic_vector(1 downto 0) := (others => '0');
+    signal forwardBE : std_logic_vector(1 downto 0) := (others => '0');
+    signal forwardCE : std_logic_vector(1 downto 0) := (others => '0');
     --signal ResultW : std_logic_vector(31 downto 0);
     --WriteRegE : inout std_logic_vector(4 downto 0);
-    signal RegWriteM : STD_LOGIC;
-    signal MemtoRegM : STD_LOGIC;
-    signal MemWriteM : STD_LOGIC;
-    signal ALUOutM : STD_LOGIC_VECTOR (31 downto 0);
-    signal WriteDataM : STD_LOGIC_VECTOR (31 downto 0);
-    signal WriteRegM : STD_LOGIC_VECTOR (4 downto 0);
+    signal RegWriteM : STD_LOGIC := '0';
+    signal MemtoRegM : STD_LOGIC := '0';
+    signal MemWriteM : STD_LOGIC := '0';
+    signal ALUOutM : STD_LOGIC_VECTOR (31 downto 0) := (others => '0');
+    signal WriteDataM : STD_LOGIC_VECTOR (31 downto 0) := (others => '0');
+    signal WriteRegM : STD_LOGIC_VECTOR (4 downto 0) := (others => '0');
     
     -- signals for mem stage
     --signal RegWriteM : STD_LOGIC;
@@ -220,11 +221,11 @@ architecture Behavioral of mips_top is
     --signal ALUOutM : STD_LOGIC_VECTOR (31 downto 0);
     --signal WriteDataM : STD_LOGIC_VECTOR (31 downto 0);
     --signal WriteRegM : STD_LOGIC_VECTOR (4 downto 0);
-    signal RegWriteW : STD_LOGIC;
-    signal MemtoRegW : STD_LOGIC;
-    signal ReadDataW : STD_LOGIC_VECTOR (31 downto 0);
-    signal ALUOutW : STD_LOGIC_VECTOR (31 downto 0);
-    signal WriteRegW : STD_LOGIC_VECTOR (4 downto 0);
+    signal RegWriteW : STD_LOGIC := '0';
+    signal MemtoRegW : STD_LOGIC := '0';
+    signal ReadDataW : STD_LOGIC_VECTOR (31 downto 0) := (others => '0');
+    signal ALUOutW : STD_LOGIC_VECTOR (31 downto 0) := (others => '0');
+    signal WriteRegW : STD_LOGIC_VECTOR (4 downto 0) := (others => '0');
     
     -- signals for the write back stage
     --signal RegWriteW : STD_LOGIC;
@@ -248,15 +249,15 @@ architecture Behavioral of mips_top is
     --signal RegWriteW : STD_LOGIC;
     --signal StallF : STD_LOGIC;
     --signal StallD : STD_LOGIC;
-    signal StallE : STD_LOGIC;
-    signal FlushE : STD_LOGIC;
-    signal FlushM : STD_LOGIC;
+    signal StallE : STD_LOGIC := '0';
+    signal FlushE : STD_LOGIC := '0';
+    signal FlushM : STD_LOGIC := '0';
     --signal ForwardAE : STD_LOGIC_VECTOR (1 downto 0);
     --signal ForwardBE : STD_LOGIC_VECTOR (1 downto 0);
     --signal ForwardCE : STD_LOGIC_VECTOR (1 downto 0);
 
 begin
-
+    
     fs: fetch_stage port map(clk, PCBranchD, StallF, StallD, PCSrcD, instD, PCPlus1D);
     ds: decode_stage port map(clk, FlushE, StallE, InstrD, WA, WD, PCPlus1D, WE, ResultW, PCSrcD, RD1E, RD2E, RD3E, RSE, RTE, 
                               RDE, SignImmE, PCBranchD, BranchD, RegWriteE, MemtoRegE, MemWriteE, ALUControlE, ALUSrcE, RegDstE);
@@ -267,5 +268,5 @@ begin
     wbs: writeback_stage port map (RegWriteW, MemtoRegW, ReadDataW, ALUOutw, WriteRegW, ResultW);
     hazard: hazard_unit port map (BranchD, RsE, RtE, RdE, ALUControlE, ALUSrcE, WriteRegM, MemtoRegM, RegWriteM,
                                   WriteRegW, RegWriteW, StallF, StallD, StallE, FlushE, FlushM, forwardAE, forwardBE, forwardCE);                 
-
+    writeresult_out <= ResultW;
 end Behavioral;
