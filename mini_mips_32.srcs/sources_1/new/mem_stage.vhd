@@ -32,7 +32,8 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity mem_stage is
-    Port ( clk : in STD_LOGIC;
+    Port ( rst : in std_logic;
+           clk : in STD_LOGIC;
            RegWriteM : in STD_LOGIC;
            MemtoRegM : in STD_LOGIC;
            MemWriteM : in STD_LOGIC;
@@ -49,14 +50,16 @@ end mem_stage;
 architecture Behavioral of mem_stage is
 
     component Data_memory is 
-        Port ( clk,WE : in std_logic; 
+        Port ( rst : in std_logic;
+               clk,WE : in std_logic; 
                A : in std_logic_vector(31 downto 0);
                WD :in std_logic_vector(31 downto 0);
                RD : out std_logic_vector(31 downto 0));
     end component;
     
     component pipe_reg_MW is 
-        Port ( clk : in std_logic;
+        Port ( rst : in std_logic;
+               clk : in std_logic;
                RegWriteM : in STD_LOGIC;
                MemtoRegM : in STD_LOGIC;
                ReadDataM : in STD_LOGIC_VECTOR (31 downto 0);
@@ -70,13 +73,11 @@ architecture Behavioral of mem_stage is
     end component;
     
     signal RD_internal : std_logic_vector(31 downto 0);
-    signal nclk : std_logic;
-
+    
 begin
 
-    nclk <= not clk;
-    RAM: Data_memory port map (clk, MemWriteM, ALUOutM, WriteDataM, RD_internal);
-    reg: pipe_reg_MW port map (clk, RegWriteM, MemtoRegM, RD_internal, ALUOutM,
+    RAM: Data_memory port map (rst, clk, MemWriteM, ALUOutM, WriteDataM, RD_internal);
+    reg: pipe_reg_MW port map (rst, clk, RegWriteM, MemtoRegM, RD_internal, ALUOutM,
                                 WriteRegM, RegWriteW, MemtoRegW, ReadDataW, AlUOutW, WriteRegW);
 
 

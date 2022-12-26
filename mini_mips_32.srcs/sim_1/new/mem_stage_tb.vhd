@@ -39,14 +39,17 @@ begin
     uut: mem_stage port map(rst,clk,RegWriteM,MemtoRegM,MemWriteM,ALUOutM,WriteDataM,WriteRegM,RegWriteW,MemtoRegW,ReadDataW,ALUOutW,WriteRegW);
     
     clk_process: process
-        begin
-            clk <= '0'; wait for 100ps;
-            clk <= '1'; wait for 100ps;
+    begin
+        clk <= not clk; wait for 5ns;
     end process;
     
     stimulus_process: process
-        begin
-            MemtoRegM <= '1'; wait;
+    begin
+        rst <= '1'; wait for 10ns; rst <= '0';
+        ALUOutM <= X"00000000"; WriteDataM <= X"00000000"; WriteRegM <= "00000";
+        RegWriteM <= '1'; MemtoRegM <= '1'; MemWriteM <= '0'; wait for 10ns;
+        WriteDataM <= X"ff11ff11"; MemWriteM <= '1'; wait for 10ns;
+        RegWriteM <= '1'; MemtoRegM <= '1'; MemWriteM <= '0'; wait;
     end process;         
 
 end Behavioral;

@@ -94,16 +94,12 @@ begin
                                RegDstE     => RegDstE );
   clocking: process
   begin
-  clk<='0';wait for 2 ns;
-  clk<='1';wait for 2 ns;
+    clk <= not clk; wait for 5ns;
   end process;
   
   stimulus: process
   begin
-    rst <= '1'; wait for 15ns; rst <= '0';
-    CLR<='0';nEN<='0';InstrD<=X"28220002";wait for 10 ns;
-    CLR<='0';nEN<='0';InstrD<=X"00221800";wait ;
-
+    rst <= '1'; wait for 5ns; wait;
   end process;
 
 
