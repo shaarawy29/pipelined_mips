@@ -32,7 +32,8 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity control_unit is
-    Port ( opcode : in STD_LOGIC_VECTOR (5 downto 0);
+    Port ( rst : in std_logic;
+           opcode : in STD_LOGIC_VECTOR (5 downto 0);
            RegWrite : out STD_logic;
            MemtoReg : out std_logic;
            MemWrite : out std_logic;
@@ -48,8 +49,11 @@ architecture Behavioral of control_unit is
 
     begin
 
-    process(opcode)
-        begin 
+    process(opcode, rst)
+    begin
+        if(rst = '1') then
+            Control_vector <= "000000000";
+        else 
             case opcode is
                 when "000000" => Control_vector <= "100000010"; -- ADD
                 when "000001" => Control_vector <= "100001010"; -- SUB
@@ -64,7 +68,8 @@ architecture Behavioral of control_unit is
                 when "001010" => Control_vector <= "000000001"; -- BEQZ
                 when others   => Control_vector <= "000000000"; -----------
             end case;
-        end process;
+        end if;
+    end process;
     
     RegWrite <= Control_vector(8);
     MemtoReg <= Control_vector(7);

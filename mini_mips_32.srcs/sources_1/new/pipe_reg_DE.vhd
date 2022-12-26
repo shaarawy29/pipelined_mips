@@ -32,7 +32,8 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity pipe_reg_DE is
-    Port ( clk : in std_logic;
+    Port ( rst : in std_logic;
+           clk : in std_logic;
            CLR : in STD_LOGIC;
            nEN : in std_logic;
            RegWriteD : in STD_LOGIC;
@@ -66,22 +67,14 @@ end pipe_reg_DE;
 architecture Behavioral of pipe_reg_DE is
 
     signal EN : std_logic;
-    signal startup : std_logic := '1';
-    signal rst : std_logic := '0';
     
 begin
 
     EN <= not nEN;
     
-    process 
-    begin
-        rst <= '1'; wait for 10ps; rst <= '0'; wait;
-    end process;
-
     process(clk, rst)
     begin
-    
-        if (startup = '1')then
+        if (rst = '1')then
             RegWriteE <= '0';
             MemtoRegE <= '0';
             MemWriteE <= '0';
@@ -95,43 +88,41 @@ begin
             RtE <= "00000";
             RdE <= "00000";
             SignImmE <= (others => '0');
-            startup <= '0';
-        end if;
-        
-        if( EN = '1') then 
-            if(clk'event and clk = '1') then
-                if(CLR = '1') then 
-                    RegWriteE <= '0';
-                    MemtoRegE <= '0';
-                    MemWriteE <= '0';
-                    ALUControlE <= "000";
-                    ALUSrcE <= '0';
-                    RegDstE <= '0';
-                    RD1E <= (others => '0');
-                    RD2E <= (others => '0');
-                    RD3E <= (others => '0');
-                    RsE <= "00000";
-                    RtE <= "00000";
-                    RdE <= "00000";
-                    SignImmE <= (others => '0');
-                else 
-                    RegWriteE <= RegWriteD;
-                    MemtoRegE <= MemtoRegD;
-                    MemWriteE <= MemWriteD;
-                    ALUControlE <= ALUControlD;
-                    ALUSrcE <= ALUSrcD;
-                    RegDstE <= RegDstD;
-                    RD1E <= RD1D;
-                    RD2E <= RD2D;
-                    RD3E <= RD3D;
-                    RsE <= RsD;
-                    RtE <= RtD;
-                    RdE <= RdD;
-                    SignImmE <= SignImmD;
+        else
+            if( EN = '1') then 
+                if(clk'event and clk = '1') then
+                    if(CLR = '1') then 
+                        RegWriteE <= '0';
+                        MemtoRegE <= '0';
+                        MemWriteE <= '0';
+                        ALUControlE <= "000";
+                        ALUSrcE <= '0';
+                        RegDstE <= '0';
+                        RD1E <= (others => '0');
+                        RD2E <= (others => '0');
+                        RD3E <= (others => '0');
+                        RsE <= "00000";
+                        RtE <= "00000";
+                        RdE <= "00000";
+                        SignImmE <= (others => '0');
+                    else 
+                        RegWriteE <= RegWriteD;
+                        MemtoRegE <= MemtoRegD;
+                        MemWriteE <= MemWriteD;
+                        ALUControlE <= ALUControlD;
+                        ALUSrcE <= ALUSrcD;
+                        RegDstE <= RegDstD;
+                        RD1E <= RD1D;
+                        RD2E <= RD2D;
+                        RD3E <= RD3D;
+                        RsE <= RsD;
+                        RtE <= RtD;
+                        RdE <= RdD;
+                        SignImmE <= SignImmD;
+                    end if;
                 end if;
             end if;
         end if;
-        
     end process;
 
 

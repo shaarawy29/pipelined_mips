@@ -38,7 +38,8 @@ use IEEE.std_logic_textio.all;
 --use UNISIM.VComponents.all;
 
 entity reg_file is
-    Port ( clk : in STD_LOGIC; -- negative clk, it is triggered at the negative edge of the clk
+    Port ( rst : in std_logic;
+           clk : in STD_LOGIC; -- negative clk, it is triggered at the negative edge of the clk
            WE : in STD_LOGIC; -- write enable pin, to enable write in the WA register 
            RA1 : in STD_LOGIC_VECTOR (4 downto 0); -- address of the first operand, source register 
            RA2 : in STD_LOGIC_VECTOR (4 downto 0); -- address of the second operand, target register 
@@ -54,15 +55,23 @@ architecture Behavioral of reg_file is
 
     type reg_file is array (0 to 31) of std_logic_vector(31 downto 0);
     signal reg_file1 : reg_file  := (others => X"00000000");
-    signal nclk : std_logic;
 
 begin
-
-    nclk <= not clk;
     
-    process(nclk) 
-        begin 
-            if (nclk'event and nclk = '1') then
+    process(clk, rst) 
+    begin 
+        if(rst = '1') then
+            RD1 <= X"00000000";
+            RD2 <= X"00000000";
+            RD3 <= X"00000000";
+        else 
+            if (rising_edge(clk)) then 
+                if(WE = '1') then
+                    reg_file1(to_integer(unsigned(WA))) <= WD; 
+                end if;
+            end if;
+            
+            if (falling_edge(clk)) then
                 RD1 <= reg_file1(to_integer(unsigned(RA1)));
                 RD2 <= reg_file1(to_integer(unsigned(RA2)));
                 RD3 <= reg_file1(to_integer(unsigned(RA3)));
@@ -76,16 +85,7 @@ begin
                     RD3 <= X"00000000";
                 end if;
             end if; 
-    end process;
-    
-    process(clk)
-    
-        begin 
-            if (clk'event and clk = '1') then 
-                if(WE = '1') then
-                    reg_file1(to_integer(unsigned(WA))) <= WD; 
-                end if;
-            end if;
+        end if;
     end process;
     
 end Behavioral;

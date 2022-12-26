@@ -8,7 +8,8 @@ end;
 architecture bench of decode_stage_tb is
 
   component decode_stage
-   Port (clk:in std_logic;
+   Port (rst : in std_logic;
+         clk: in std_logic;
          CLR: in std_logic;
          nEN : in std_logic;
          InstrD:in std_logic_vector(31 downto 0);
@@ -36,6 +37,7 @@ architecture bench of decode_stage_tb is
          ) ;
   end component;
 
+  signal rst: std_logic := '1';
   signal clk: std_logic:='0';
   signal CLR: std_logic:='0';
   signal nEN: std_logic:='0';
@@ -64,7 +66,8 @@ architecture bench of decode_stage_tb is
 
 begin
 
-  uut: decode_stage port map ( clk         => clk,
+  uut: decode_stage port map ( rst         => rst,
+                               clk         => clk,
                                CLR         => CLR,
                                nEN         => nEN,
                                InstrD      => InstrD,
@@ -97,12 +100,9 @@ begin
   
   stimulus: process
   begin
-  
-    -- Put initialisation code here
+    rst <= '1'; wait for 15ns; rst <= '0';
     CLR<='0';nEN<='0';InstrD<=X"28220002";wait for 10 ns;
     CLR<='0';nEN<='0';InstrD<=X"00221800";wait ;
-
-    -- Put test bench stimulus code here
 
   end process;
 
