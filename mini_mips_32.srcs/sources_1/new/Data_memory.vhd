@@ -19,18 +19,24 @@ architecture Behavioral of Data_memory is
 
     type mem is array (0 to 31) of std_logic_vector(31 downto 0);
     signal ram_block : mem := (others=>(others=>'0'));
+    signal startup : std_logic := '1';
+    signal rst : std_logic := '0';
 
 begin
 
-     process
+    process 
+    begin
+        rst <= '1'; wait for 10ps; rst <= '0'; wait;
+    end process;
+    
+    process(clk, rst)
         file f : TEXT;
         constant filename: string := "D:\vivado_proj\mini_mips_32\data.txt";
         variable l : line;
         variable i : integer := 0;
         variable b : std_logic_vector(31 downto 0);
-        variable startup : boolean := true;
     begin
-        if(startup = true)then
+        if(startup = '1')then
             file_open(f,filename,read_mode);
             while((i <= 31) and (not endfile(f)))loop
                 readline(f,l);
@@ -40,20 +46,16 @@ begin
                 i := i+1;
             end loop;
             file_close(f);
-            startup := false;
+            startup <= '0';
         end if;
-        wait;
-    end process;
-    
-    process(clk)
-    begin
-            if(falling_edge(clk)) then
-                if(WE = '1') then
-                    ram_block(to_integer(unsigned(A))) <= WD;     
-                else    
-                    --RD <= array_memory(cut_address);
-                    RD <= ram_block(to_integer(unsigned(A)));
-                end if;
+        
+        if(falling_edge(clk)) then
+            if(WE = '1') then
+                ram_block(to_integer(unsigned(A))) <= WD;     
+            else    
+                --RD <= array_memory(cut_address);
+                RD <= ram_block(to_integer(unsigned(A)));
             end if;
+        end if;
     end process;
 end Behavioral;

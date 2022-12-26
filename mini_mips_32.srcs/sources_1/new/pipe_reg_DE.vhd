@@ -48,7 +48,7 @@ entity pipe_reg_DE is
            RtD : in STD_LOGIC_VECTOR (4 downto 0);
            RdD : in STD_LOGIC_VECTOR (4 downto 0);
            SignImmD : in STD_LOGIC_VECTOR (31 downto 0);
-           Reg_WriteE : out STD_LOGIC;
+           RegWriteE : out STD_LOGIC;
            MemtoRegE : out STD_LOGIC;
            MemWriteE : out STD_LOGIC;
            ALUControlE : out STD_LOGIC_VECTOR( 2 downto 0);
@@ -66,17 +66,42 @@ end pipe_reg_DE;
 architecture Behavioral of pipe_reg_DE is
 
     signal EN : std_logic;
+    signal startup : std_logic := '1';
+    signal rst : std_logic := '0';
     
 begin
 
     EN <= not nEN;
-
-    process(clk)
+    
+    process 
     begin
+        rst <= '1'; wait for 10ps; rst <= '0'; wait;
+    end process;
+
+    process(clk, rst)
+    begin
+    
+        if (startup = '1')then
+            RegWriteE <= '0';
+            MemtoRegE <= '0';
+            MemWriteE <= '0';
+            ALUControlE <= "000";
+            ALUSrcE <= '0';
+            RegDstE <= '0';
+            RD1E <= (others => '0');
+            RD2E <= (others => '0');
+            RD3E <= (others => '0');
+            RsE <= "00000";
+            RtE <= "00000";
+            RdE <= "00000";
+            SignImmE <= (others => '0');
+            startup <= '0';
+        end if;
+        
         if( EN = '1') then 
             if(clk'event and clk = '1') then
                 if(CLR = '1') then 
-                    Reg_WriteE <= '0';
+                    RegWriteE <= '0';
                     MemtoRegE <= '0';
                     MemWriteE <= '0';
                     ALUControlE <= "000";
@@ -90,7 +115,7 @@ begin
                     RdE <= "00000";
                     SignImmE <= (others => '0');
                 else 
-                    Reg_WriteE <= Reg_WriteD;
+                    RegWriteE <= RegWriteD;
                     MemtoRegE <= MemtoRegD;
                     MemWriteE <= MemWriteD;
                     ALUControlE <= ALUControlD;

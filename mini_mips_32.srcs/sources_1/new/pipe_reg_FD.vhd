@@ -33,34 +33,43 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity pipe_reg_FD is
     Port ( instF : in STD_LOGIC_VECTOR (31 downto 0);
-           PCplus1F : in STD_LOGIC_VECTOR (31 downto 0);
+           PCPlus1F : in STD_LOGIC_VECTOR (31 downto 0);
            clk : in STD_LOGIC;
            CLR : in STD_LOGIC;
            nEN : in STD_LOGIC;
            instD : out STD_LOGIC_VECTOR (31 downto 0);
-           PCplus1D : out STD_LOGIC_VECTOR (31 downto 0));
+           PCPlus1D : out STD_LOGIC_VECTOR (31 downto 0));
 end pipe_reg_FD;
 
 architecture Behavioral of pipe_reg_FD is
     
     signal EN : std_logic;
-    
+   
 begin
     
     EN <= not nEN;
 
     process(clk)
+            variable startup : boolean := true;
         begin
+        
+            if (startup = true)then
+                instD <= (others => '0');
+                PCPlus1D <= (others => '0');
+                startup := false;
+            end if;
+            
             if(EN = '1') then
                 if( clk'event and clk = '1') then
                     instD <= instF;
-                    PCplus1D <= PCplus1F;
+                    PCPlus1D <= PCPlus1F;
                     if(CLR = '1') then
                         instD <= (others => '0');
-                        PCplus1D <= (others => '0');
+                        PCPlus1D <= (others => '0');
                     end if;
                 end if;
             end if;
+            
     end process;
 
 end Behavioral;

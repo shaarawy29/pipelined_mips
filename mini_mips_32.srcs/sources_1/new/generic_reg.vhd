@@ -40,16 +40,28 @@ entity generic_reg is
 end generic_reg;
 
 architecture Behavioral of generic_reg is
-signal EN : std_logic;
+
+    signal EN : std_logic := '0';
+
 begin
+
     EN <= not nEN;
-    process(clk)
+    
+    process(clk) 
+        variable startup : boolean := true;
     begin
+    
+        if (startup = true) then 
+            q <= (others => '0');
+           -- startup := false;
+        end if;
+        
         if(EN = '1') then
             if(clk'event and clk = '1')then 
                 q <= d;
             end if;
         end if;
+
     end process;
 
 end Behavioral;

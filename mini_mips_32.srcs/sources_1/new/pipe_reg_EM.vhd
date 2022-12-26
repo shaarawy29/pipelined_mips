@@ -53,8 +53,19 @@ architecture Behavioral of pipe_reg_EM is
 begin
 
     process(clk)
-        
+    
+            variable startup : boolean := true;
+            
         begin 
+            if (startup = true) then 
+                RegWriteM <= '0';
+                MemtoRegM <= '0';
+                MemWriteM <= '0';
+                ALUOutM <= (others => '0');
+                WriteDataM <= (others => '0');
+                WriteRegM <= (others => '0');
+                startup := false;
+            end if;
             
             if(clk'event and clk = '1') then 
                 if(CLR = '1') then

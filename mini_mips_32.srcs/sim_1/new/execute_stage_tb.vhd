@@ -89,12 +89,12 @@ architecture Behavioral of execute_stage_tb is
     signal forwardCE : std_logic_vector(1 downto 0) := (others => '0');
     signal ResultW : std_logic_vector(31 downto 0) := (others => '0');
      --WriteRegE : inout std_logic_vector(4 downto 0);
-    signal RegWriteM : STD_LOGIC := '0';
-    signal MemtoRegM : STD_LOGIC := '0';
-    signal MemWriteM : STD_LOGIC := '0';
-    signal ALUOutM : STD_LOGIC_VECTOR (31 downto 0) := (others => '0');
-    signal WriteDataM : STD_LOGIC_VECTOR (31 downto 0) := (others => '0');
-    signal WriteRegM : STD_LOGIC_VECTOR (4 downto 0) := (others => '0');
+    signal RegWriteM : STD_LOGIC;
+    signal MemtoRegM : STD_LOGIC;
+    signal MemWriteM : STD_LOGIC;
+    signal ALUOutM : STD_LOGIC_VECTOR (31 downto 0);
+    signal WriteDataM : STD_LOGIC_VECTOR (31 downto 0);
+    signal WriteRegM : STD_LOGIC_VECTOR (4 downto 0);
     
 begin
 

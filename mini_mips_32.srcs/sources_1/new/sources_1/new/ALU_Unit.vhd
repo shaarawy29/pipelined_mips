@@ -35,11 +35,12 @@ end ALU_Unit;
 
 architecture Behavioral of ALU_Unit is
 
-    signal W1, W2, W3:std_logic_vector(31 downto 0);
-    signal tmp: std_logic_vector(31 downto 0);
+    signal W1, W2, W3:std_logic_vector(31 downto 0) := X"00000000";
+    signal tmp: std_logic_vector(31 downto 0) := X"00000000";
 
 begin
     process (SrcA, SrcB, SrcC, ALU_sel)
+        variable ANN_out : std_logic_vector(63 downto 0) := X"0000000000000000";
     begin 
         case ALU_sel is 
             when "000" => 
@@ -54,11 +55,13 @@ begin
                 W1 <= SrcA;
                 W2 <= SrcB;
                 W3 <= SrcC;
+                ALU_out <= X"00000000";
             when "101" => -- ANN instruction to use the feedback tmp 
-                ALU_out <= W1*SrcA + W2*SrcB + W3*tmp;
-                tmp <= W1*SrcA + W2*SrcB + W3*tmp;
+                ANN_out := W1*SrcA + W2*SrcB + W3*tmp;
+                ALU_out <= ANN_out(31 downto 0);
+                tmp <= ANN_out(31 downto 0);
             when others => -- in case of undefiend signal is in 
-                ALU_out <= (others => 'X');
+                ALU_out <= (others => '0');
         end case;
         
     end process;

@@ -86,13 +86,13 @@ architecture Behavioral of execute_stage is
                WriteRegM : out STD_LOGIC_VECTOR (4 downto 0));
     end component;   
     
-    signal WriteRegE : std_logic_vector(4 downto 0);
-    signal operandB : std_logic_vector (31 downto 0);  
-    signal SrcAE : std_logic_vector(31 downto 0);
-    signal SrcBE : std_logic_vector(31 downto 0);
-    signal SrcCE : std_logic_vector(31 downto 0);
-    signal WriteDataE : std_logic_vector(31 downto 0);
-    signal ALUOutE : std_logic_vector(31 downto 0);
+    signal WriteRegE : std_logic_vector(4 downto 0) := (others => '0');
+    signal operandB : std_logic_vector (31 downto 0) := (others => '0');  
+    signal SrcAE : std_logic_vector(31 downto 0) := (others => '0');
+    signal SrcBE : std_logic_vector(31 downto 0) := (others => '0');
+    signal SrcCE : std_logic_vector(31 downto 0) := (others => '0');
+    signal WriteDataE : std_logic_vector(31 downto 0) := (others => '0');
+    signal ALUOutE : std_logic_vector(31 downto 0) := (others => '0');
 
 begin
 
