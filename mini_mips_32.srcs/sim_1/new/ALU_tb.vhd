@@ -38,21 +38,24 @@ end ALU_tb;
 architecture Behavioral of ALU_tb is
 
     component ALU_Unit is 
-        Port (SrcA, SrcB,SrcC : in std_logic_vector(31 downto 0);
-         ALU_out : out std_logic_vector(31 downto 0);
-         ALU_sel : in std_logic_vector(2 downto 0));
+        Port ( rst : in std_logic;
+               SrcA, SrcB,SrcC : in std_logic_vector(31 downto 0);
+               ALU_out : out std_logic_vector(31 downto 0);
+               ALU_sel : in std_logic_vector(2 downto 0));
     end component;
     
+    signal rst : std_logic := '1';
     signal SrcA, SrcB, SrcC : std_logic_vector(31 downto 0) := (others => '0');
     signal ALU_Out : std_logic_vector(31 downto 0);
     signal ALU_sel : std_logic_vector (2 downto 0) := (others => '0');
 
 begin
     
-    uut: ALU_Unit port map (SrcA, SrcB, SrcC, ALU_out, ALU_sel);
+    uut: ALU_Unit port map (rst, SrcA, SrcB, SrcC, ALU_out, ALU_sel);
     
     process 
     begin
+        rst <= '1'; wait for 10ns; rst <= '0'; wait for 5ns;
         SrcA <= X"00000011"; SrcB <= X"00000001"; SrcC <= X"00000010"; ALU_sel <= "000"; wait for 5ns;
         SrcA <= X"00000011"; SrcB <= X"00000001"; SrcC <= X"00000010"; ALU_sel <= "001"; wait for 5ns;
         SrcA <= X"00000011"; SrcB <= X"00000001"; SrcC <= X"00000010"; ALU_sel <= "010"; wait for 5ns;

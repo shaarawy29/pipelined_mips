@@ -38,7 +38,8 @@ end execute_stage_tb;
 architecture Behavioral of execute_stage_tb is
     
     component execute_stage is 
-        Port ( clk : in STD_LOGIC;
+        Port ( rst : in std_logic;
+               clk : in STD_LOGIC;
                RegWriteE : in STD_LOGIC;
                MemtoRegE : in STD_LOGIC;
                MemWriteE : in STD_LOGIC;
@@ -68,7 +69,8 @@ architecture Behavioral of execute_stage_tb is
     end component;
     
     -- execute state signals 
-    signal clk : STD_LOGIC := '1';
+    signal rst : std_logic := '1';
+    signal clk : STD_LOGIC := '0';
     signal RegWriteE : STD_LOGIC := '0';
     signal MemtoRegE : STD_LOGIC := '0';
     signal MemWriteE : STD_LOGIC := '0';
@@ -98,7 +100,7 @@ architecture Behavioral of execute_stage_tb is
     
 begin
 
-    uut: execute_stage port map (clk, RegWriteE, MemtoRegE, MemWriteE, ALUControlE, ALUSrcE, RegDstE, RD1E, RD2E, RD3E, RsE, RtE, RdE, SignImmE,
+    uut: execute_stage port map (rst, clk, RegWriteE, MemtoRegE, MemWriteE, ALUControlE, ALUSrcE, RegDstE, RD1E, RD2E, RD3E, RsE, RtE, RdE, SignImmE,
                                  CLR, forwardAE, forwardBE, forwardCE, ResultW, RegWriteM, MemtoRegM, MemWriteM, ALUOutM, WriteDataM, WriteRegM);
 
     clk_process: process
@@ -108,7 +110,7 @@ begin
     
     stimulus_process: process 
     begin
-        wait for 5ns;
+        rst <= '1'; wait for 13ns; rst <= '0';
         RegWriteE <= '1'; MemtoRegE <= '0'; MemWriteE <= '0'; ALUControlE <= "000"; ALUSrcE <= '0'; RegDstE <= '1';
         RD1E <= X"10000001"; RD2E <= X"11000000"; RD3E <= X"00110011";
         RsE <= "00011"; RtE <= "00001"; RdE <= "00010"; SignImmE <= X"00000111"; CLR <= '0';

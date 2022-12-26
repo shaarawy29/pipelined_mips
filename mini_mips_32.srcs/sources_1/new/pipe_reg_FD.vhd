@@ -32,7 +32,8 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity pipe_reg_FD is
-    Port ( instF : in STD_LOGIC_VECTOR (31 downto 0);
+    Port ( rst : in std_logic;
+           instF : in STD_LOGIC_VECTOR (31 downto 0);
            PCPlus1F : in STD_LOGIC_VECTOR (31 downto 0);
            clk : in STD_LOGIC;
            CLR : in STD_LOGIC;
@@ -49,16 +50,14 @@ begin
     
     EN <= not nEN;
 
-    process(clk)
-            variable startup : boolean := true;
-        begin
-        
-            if (startup = true)then
-                instD <= (others => '0');
-                PCPlus1D <= (others => '0');
-                startup := false;
-            end if;
-            
+    process(clk, rst)
+    begin
+    
+         if ( rst <= '1') then
+             instD <= (others => '0');
+             PCPlus1D <= (others => '0');
+         else
+                    
             if(EN = '1') then
                 if( clk'event and clk = '1') then
                     instD <= instF;
@@ -69,7 +68,8 @@ begin
                     end if;
                 end if;
             end if;
-            
+        end if;
+          
     end process;
 
 end Behavioral;

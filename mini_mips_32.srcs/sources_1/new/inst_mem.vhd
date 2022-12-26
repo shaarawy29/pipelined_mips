@@ -35,7 +35,8 @@ use std.textio.all;
 --use UNISIM.VComponents.all;
 
 entity inst_mem is
-    Port ( A : in STD_LOGIC_VECTOR (31 downto 0);
+    Port ( rst : in std_logic;
+           A : in STD_LOGIC_VECTOR (31 downto 0);
            inst : out STD_LOGIC_VECTOR (31 downto 0));
 end inst_mem;
 
@@ -48,15 +49,14 @@ begin
     
     inst <= rom_block(to_integer(unsigned(A)));
     
-    process
+    process (rst)
         file f : TEXT;
         constant filename: string := "D:\vivado_proj\mini_mips_32\program.txt";
         variable l : line;
         variable i : integer := 0;
         variable b : std_logic_vector(31 downto 0);
-        variable startup : boolean := true;
     begin
-        if(startup = true)then
+        if(rst = '1') then
             file_open(f,filename,read_mode);
             while((i <= 31) and (not endfile(f)))loop
                 readline(f,l);
@@ -66,9 +66,7 @@ begin
                 i := i+1;
             end loop;
             file_close(f);
-            startup := false;
         end if;
-        wait;
     end process;
     
     

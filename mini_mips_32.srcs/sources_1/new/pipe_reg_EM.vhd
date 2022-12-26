@@ -32,7 +32,8 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity pipe_reg_EM is
-    Port ( clk : in std_logic;
+    Port ( rst : in std_logic;
+           clk : in std_logic;
            CLR : in STD_LOGIC;
            RegWriteE : in STD_LOGIC;
            MemtoRegE : in STD_LOGIC;
@@ -52,21 +53,16 @@ architecture Behavioral of pipe_reg_EM is
 
 begin
 
-    process(clk)
-    
-            variable startup : boolean := true;
-            
-        begin 
-            if (startup = true) then 
-                RegWriteM <= '0';
-                MemtoRegM <= '0';
-                MemWriteM <= '0';
-                ALUOutM <= (others => '0');
-                WriteDataM <= (others => '0');
-                WriteRegM <= (others => '0');
-                startup := false;
-            end if;
-            
+    process(clk, rst)
+    begin
+        if(rst = '1') then
+            RegWriteM <= '0';
+            MemtoRegM <= '0';
+            MemWriteM <= '0';
+            ALUOutM <= (others => '0');
+            WriteDataM <= (others => '0');
+            WriteRegM <= (others => '0');
+        else 
             if(clk'event and clk = '1') then 
                 if(CLR = '1') then
                     RegWriteM <= '0';
@@ -84,7 +80,7 @@ begin
                     WriteRegM <= WriteRegE;
                 end if;
             end if;
-            
+        end if;
     end process;
 
 end Behavioral;

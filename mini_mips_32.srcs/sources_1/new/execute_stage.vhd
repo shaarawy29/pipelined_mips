@@ -32,7 +32,8 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity execute_stage is
-    Port ( clk : in STD_LOGIC;
+    Port ( rst : in std_logic;
+           clk : in STD_LOGIC;
            RegWriteE : in STD_LOGIC;
            MemtoRegE : in STD_LOGIC;
            MemWriteE : in STD_LOGIC;
@@ -64,13 +65,15 @@ end execute_stage;
 architecture Behavioral of execute_stage is
     
     component ALU_Unit is 
-        Port ( SrcA, SrcB,SrcC : in std_logic_vector(31 downto 0);
+        Port ( rst : in std_logic;
+               SrcA, SrcB,SrcC : in std_logic_vector(31 downto 0);
                ALU_out : out std_logic_vector(31 downto 0);
                ALU_sel : in std_logic_vector(2 downto 0));
     end component;
     
     component pipe_reg_EM is 
-        Port ( clk : in std_logic;
+        Port ( rst : in std_logic;
+               clk : in std_logic;
                CLR : in STD_LOGIC;
                RegWriteE : in STD_LOGIC;
                MemtoRegE : in STD_LOGIC;
@@ -96,8 +99,8 @@ architecture Behavioral of execute_stage is
 
 begin
 
-    ALU: ALU_Unit port map ( SrcAE, SrcBE, SrcCE, ALUOutE, ALUControlE);
-    reg: pipe_reg_EM port map ( clk, CLR, RegWriteE, MemtoRegE, MemWriteE, ALUOutE, WriteDataE, WriteRegE,
+    ALU: ALU_Unit port map ( rst, SrcAE, SrcBE, SrcCE, ALUOutE, ALUControlE);
+    reg: pipe_reg_EM port map ( rst, clk, CLR, RegWriteE, MemtoRegE, MemWriteE, ALUOutE, WriteDataE, WriteRegE,
                                 RegWriteM, MemtoRegM, MemWriteM, ALUOutM, WriteDataM, WriteRegM); 
     
     WriteRegE <= RtE when RegDstE = '0' else

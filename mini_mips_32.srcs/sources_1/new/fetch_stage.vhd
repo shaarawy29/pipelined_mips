@@ -2,7 +2,8 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
 entity fetch_stage is
-  Port (clk: in std_logic;
+  Port (rst : in std_logic;
+        clk: in std_logic;
         PCBranchD: in std_logic_vector(31 downto 0); --address to jump 
         StallF: in std_logic;
         StallD: in std_logic;
