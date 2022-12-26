@@ -53,7 +53,7 @@ begin
     
         if (startup = true) then 
             q <= (others => '0');
-           -- startup := false;
+            startup := false;
         end if;
         
         if(EN = '1') then

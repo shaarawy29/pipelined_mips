@@ -68,7 +68,7 @@ architecture Behavioral of execute_stage_tb is
     end component;
     
     -- execute state signals 
-    signal clk : STD_LOGIC := '0';
+    signal clk : STD_LOGIC := '1';
     signal RegWriteE : STD_LOGIC := '0';
     signal MemtoRegE : STD_LOGIC := '0';
     signal MemWriteE : STD_LOGIC := '0';

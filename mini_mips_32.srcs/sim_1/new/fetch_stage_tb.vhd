@@ -21,17 +21,17 @@ architecture Behavioral of fetch_stage_tb is
                PCPlus1F_out: out std_logic_vector(31 downto 0));
     end component;
     
-    signal clk: std_logic := '0'; 
+    signal clk: std_logic := '1'; 
     signal PCBranchD: std_logic_vector(31 downto 0):= X"00000001"; --(others => '0');
     signal StallF: std_logic := '0';
     signal StallD: std_logic := '0';
     signal PCSrcD: std_logic := '0';
     signal instD: std_logic_vector(31 downto 0);
-    signal PCPlus1D: std_logic_vector(31 downto 0) := (others => '0');
-    signal instF_out: std_logic_vector(31 downto 0) := (others => '0');
-    signal PC_out: std_logic_vector(31 downto 0) := (others => '0');
-    signal PCF_out: std_logic_vector(31 downto 0) := (others => '0');
-    signal PCPlus1F_out: std_logic_vector(31 downto 0) := (others => '0');
+    signal PCPlus1D: std_logic_vector(31 downto 0);
+    signal instF_out: std_logic_vector(31 downto 0);
+    signal PC_out: std_logic_vector(31 downto 0);
+    signal PCF_out: std_logic_vector(31 downto 0);
+    signal PCPlus1F_out: std_logic_vector(31 downto 0);
     
 begin
     uut: fetch_stage port map (clk , PCBranchD , StallF , StallD, PCSrcD, instD, PCPlus1D, instF_out, PC_out, PCF_out, PCPlus1F_out);
@@ -43,7 +43,7 @@ begin
     
     stimulus_process: process
     begin
-        PCSrcD <= '1';
+        PCSrcD <= '0';
         wait;    
     end process;
     

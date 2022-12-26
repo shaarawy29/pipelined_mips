@@ -48,20 +48,25 @@ architecture Behavioral of fetch_stage is
     signal PCF: std_logic_vector(31 downto 0) := (others => '0');
     signal instF: std_logic_vector(31 downto 0) := (others => '0');
     signal PCPlus1F : std_logic_vector(31 downto 0) := (others => '0');
+    signal intermediate: std_logic_vector(31 downto 0) := (others => '0');
+    signal intermediate2: std_logic_vector(31 downto 0) := (others => '0');
         
 begin
     PC <= PCPlus1F when PCSrcD = '0' else 
-          PCBranchD; 
-    --PCREG: generic_reg generic map (32) port map (clk , StallF , PC , PCF);
+          PCBranchD;
+    
+    intermediate <= PC;
+    intermediate2 <= PCPlus1F;
+    
+    PCREG: generic_reg generic map (32) port map (clk , StallF , intermediate , PCF);
     PCAdder: Adder port map (PCF , X"00000001", PCPlus1F);
     ROM: inst_mem port map (PCF, instF);
-    FDReg: pipe_reg_FD port map (instF, PCPlus1F, clk, PCSrcD, StallD , instD , PCPlus1D); 
+    FDReg: pipe_reg_FD port map (instF, intermediate2, clk, PCSrcD, StallD , instD , PCPlus1D); 
     
     PC_out <= PC;
     PCF_out <= PCF;
     instF_out <= instF;
-    PCPlus1F_out <= PCPlus1F;
-    
-    PCF <= PC when clk'event and clk = '1' and StallF = '0';
+    PCPlus1F_out <= intermediate2;
+   
     
 end Behavioral;

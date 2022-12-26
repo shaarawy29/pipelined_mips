@@ -43,7 +43,7 @@ end pipe_reg_FD;
 
 architecture Behavioral of pipe_reg_FD is
     
-    signal EN : std_logic;
+    signal EN : std_logic := '0';
    
 begin
     
