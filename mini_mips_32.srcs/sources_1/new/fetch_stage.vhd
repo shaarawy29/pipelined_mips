@@ -18,13 +18,15 @@ end fetch_stage;
 
 architecture Behavioral of fetch_stage is
     component inst_mem is
-        Port ( A : in STD_LOGIC_VECTOR (31 downto 0);
+        Port ( rst : in std_logic;
+               A : in STD_LOGIC_VECTOR (31 downto 0);
                inst : out STD_LOGIC_VECTOR (31 downto 0));
     end component;
 
     component generic_reg is
         generic(w : integer);
-        Port ( clk : in STD_LOGIC;
+        Port ( rst : in std_logic;
+               clk : in STD_LOGIC;
                nEN : in std_logic;
                d : in STD_LOGIC_VECTOR(w-1 downto 0);
                q : out STD_LOGIC_VECTOR(w-1 downto 0));
@@ -36,7 +38,8 @@ architecture Behavioral of fetch_stage is
     end component;
     
     component pipe_reg_FD is
-        Port ( instF : in STD_LOGIC_VECTOR (31 downto 0);
+        Port ( rst : in std_logic;
+               instF : in STD_LOGIC_VECTOR (31 downto 0);
                PCPlus1F : in STD_LOGIC_VECTOR (31 downto 0);
                clk : in STD_LOGIC;
                CLR : in STD_LOGIC;
@@ -44,7 +47,7 @@ architecture Behavioral of fetch_stage is
                instD : out STD_LOGIC_VECTOR (31 downto 0);
                PCPlus1D : out STD_LOGIC_VECTOR (31 downto 0));
     end component;
-
+    
     signal PC : std_logic_vector(31 downto 0) := (others => '0');
     signal PCF: std_logic_vector(31 downto 0) := (others => '0');
     signal instF: std_logic_vector(31 downto 0) := (others => '0');
@@ -59,10 +62,10 @@ begin
     intermediate <= PC;
     intermediate2 <= PCPlus1F;
     
-    PCREG: generic_reg generic map (32) port map (clk , StallF , intermediate , PCF);
+    PCREG: generic_reg generic map (32) port map (rst, clk , StallF , intermediate , PCF);
     PCAdder: Adder port map (PCF , X"00000001", PCPlus1F);
-    ROM: inst_mem port map (PCF, instF);
-    FDReg: pipe_reg_FD port map (instF, intermediate2, clk, PCSrcD, StallD , instD , PCPlus1D); 
+    ROM: inst_mem port map (rst, PCF, instF);
+    FDReg: pipe_reg_FD port map (rst, instF, intermediate2, clk, PCSrcD, StallD , instD , PCPlus1D); 
     
     PC_out <= PC;
     PCF_out <= PCF;

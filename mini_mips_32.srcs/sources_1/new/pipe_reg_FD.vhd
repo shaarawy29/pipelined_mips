@@ -53,11 +53,10 @@ begin
     process(clk, rst)
     begin
     
-         if ( rst <= '1') then
+         if ( rst = '1') then
              instD <= (others => '0');
              PCPlus1D <= (others => '0');
-         else
-                    
+         else       
             if(EN = '1') then
                 if( clk'event and clk = '1') then
                     instD <= instF;

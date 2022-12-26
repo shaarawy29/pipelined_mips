@@ -8,7 +8,8 @@ end fetch_stage_tb;
 architecture Behavioral of fetch_stage_tb is
 
     component fetch_stage is
-         Port (clk: in std_logic;
+         Port (rst : in std_logic;
+               clk: in std_logic;
                PCBranchD: in std_logic_vector(31 downto 0); --address to jump 
                StallF: in std_logic;
                StallD: in std_logic;
@@ -21,7 +22,8 @@ architecture Behavioral of fetch_stage_tb is
                PCPlus1F_out: out std_logic_vector(31 downto 0));
     end component;
     
-    signal clk: std_logic := '1'; 
+    signal rst : std_logic := '1';
+    signal clk: std_logic := '0'; 
     signal PCBranchD: std_logic_vector(31 downto 0):= X"00000001"; --(others => '0');
     signal StallF: std_logic := '0';
     signal StallD: std_logic := '0';
@@ -34,7 +36,7 @@ architecture Behavioral of fetch_stage_tb is
     signal PCPlus1F_out: std_logic_vector(31 downto 0);
     
 begin
-    uut: fetch_stage port map (clk , PCBranchD , StallF , StallD, PCSrcD, instD, PCPlus1D, instF_out, PC_out, PCF_out, PCPlus1F_out);
+    uut: fetch_stage port map (rst, clk , PCBranchD , StallF , StallD, PCSrcD, instD, PCPlus1D, instF_out, PC_out, PCF_out, PCPlus1F_out);
     
     clk_process: process
     begin
@@ -43,7 +45,10 @@ begin
     
     stimulus_process: process
     begin
-        PCSrcD <= '0';
+        rst <= '1'; wait for 15ns; rst <= '0';
+        PCSrcD <= '0'; wait for 50ns;
+        PCSrcD <= '1'; wait for 50ns;
+        PCSrcD <= '0'; wait;
         wait;    
     end process;
     
