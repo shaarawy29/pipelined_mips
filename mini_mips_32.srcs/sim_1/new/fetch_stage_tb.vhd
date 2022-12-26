@@ -15,11 +15,7 @@ architecture Behavioral of fetch_stage_tb is
                StallD: in std_logic;
                PCSrcD: in std_logic;
                instD: out std_logic_vector(31 downto 0);
-               PCPlus1D: out std_logic_vector(31 downto 0);
-               instF_out: out std_logic_vector(31 downto 0);
-               PC_out: out std_logic_vector(31 downto 0);
-               PCF_out: out std_logic_vector(31 downto 0);
-               PCPlus1F_out: out std_logic_vector(31 downto 0));
+               PCPlus1D: out std_logic_vector(31 downto 0));
     end component;
     
     signal rst : std_logic := '1';
@@ -30,13 +26,9 @@ architecture Behavioral of fetch_stage_tb is
     signal PCSrcD: std_logic := '0';
     signal instD: std_logic_vector(31 downto 0);
     signal PCPlus1D: std_logic_vector(31 downto 0);
-    signal instF_out: std_logic_vector(31 downto 0);
-    signal PC_out: std_logic_vector(31 downto 0);
-    signal PCF_out: std_logic_vector(31 downto 0);
-    signal PCPlus1F_out: std_logic_vector(31 downto 0);
     
 begin
-    uut: fetch_stage port map (rst, clk , PCBranchD , StallF , StallD, PCSrcD, instD, PCPlus1D, instF_out, PC_out, PCF_out, PCPlus1F_out);
+    uut: fetch_stage port map (rst, clk , PCBranchD , StallF , StallD, PCSrcD, instD, PCPlus1D);
     
     clk_process: process
     begin

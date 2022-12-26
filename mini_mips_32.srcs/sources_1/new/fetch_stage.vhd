@@ -9,11 +9,7 @@ entity fetch_stage is
         StallD: in std_logic;
         PCSrcD : in std_logic;
         instD : out std_logic_vector(31 downto 0);
-        PCPlus1D : out std_logic_vector(31 downto 0);
-        instF_out : out std_logic_vector(31 downto 0);
-        PC_out : out std_logic_vector(31 downto 0);
-        PCF_out : out std_logic_vector(31 downto 0);
-        PCPlus1F_out : out std_logic_Vector(31 downto 0));
+        PCPlus1D : out std_logic_vector(31 downto 0));
 end fetch_stage;
 
 architecture Behavioral of fetch_stage is
@@ -66,11 +62,5 @@ begin
     PCAdder: Adder port map (PCF , X"00000001", PCPlus1F);
     ROM: inst_mem port map (rst, PCF, instF);
     FDReg: pipe_reg_FD port map (rst, instF, intermediate2, clk, PCSrcD, StallD , instD , PCPlus1D); 
-    
-    PC_out <= PC;
-    PCF_out <= PCF;
-    instF_out <= instF;
-    PCPlus1F_out <= intermediate2;
-   
     
 end Behavioral;
