@@ -32,19 +32,33 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity writeback_stage is
-    Port ( RegWriteW : inout STD_LOGIC;
-           MemtoRegW : in STD_LOGIC;
+    Port ( rst : in std_logic;
+           RegWriteW_in : in STD_LOGIC;
+           RegWriteW_out : out STD_LOGIC;
+           MemtoRegW_in : in STD_LOGIC;
+           MemtoRegW_out : out std_logic;
            ReadDataW : in STD_LOGIC_VECTOR (31 downto 0);
            ALUOutW : in STD_LOGIC_VECTOR (31 downto 0);
-           WriteRegW : inout STD_LOGIC_VECTOR (4 downto 0);
+           WriteRegW_in : in STD_LOGIC_VECTOR (4 downto 0);
+           WriteRegW_out : out std_logic_vector(4 downto 0);
            ResultW : out STD_LOGIC_VECTOR (31 downto 0));
 end writeback_stage;
 
 architecture Behavioral of writeback_stage is
 
 begin
+    
+    RegWriteW_out <= '0' when rst = '1' else
+                     RegWriteW_in;
+                     
+    MemtoRegW_out <= '0' when rst = '1' else
+                     MemtoRegW_in;
+                     
+    WriteRegW_out <= "00000" when rst = '1' else
+                     WriteRegW_in;
 
-    ResultW <= ReadDataW when MemtoRegW = '1' else
+    ResultW <= X"00000000" when rst = '1' else
+               ReadDataW when MemtoRegW_in = '1' else
                ALUOutW;
 
 end Behavioral;

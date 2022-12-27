@@ -37,7 +37,10 @@ entity mips_top is
            InstrD_out : out std_logic_vector(31 downto 0);
            SignImmE_out : out std_logic_vector(31 downto 0);
            ALUOutM_out : out std_logic_vector(31 downto 0);
-           ResultW_out : out std_logic_vector(31 downto 0));
+           ResultW_out : out std_logic_vector(31 downto 0);
+           RegWriteW_out : out std_logic;
+           WriteRegW_out : out std_logic_vector(4 downto 0);
+           RegWriteM_out : out std_logic);
 end mips_top;
 
 architecture Behavioral of mips_top is
@@ -130,11 +133,15 @@ architecture Behavioral of mips_top is
     end component;
     
     component writeback_stage is 
-        Port ( RegWriteW : inout STD_LOGIC;
-               MemtoRegW : inout STD_LOGIC;
+        Port ( rst : in std_logic;
+               RegWriteW_in : in STD_LOGIC;
+               RegWriteW_out : out STD_LOGIC;
+               MemtoRegW_in : in STD_LOGIC;
+               MemtoRegW_out : out std_logic;
                ReadDataW : in STD_LOGIC_VECTOR (31 downto 0);
                ALUOutW : in STD_LOGIC_VECTOR (31 downto 0);
-               WriteRegW : inout STD_LOGIC_VECTOR (4 downto 0);
+               WriteRegW_in : in STD_LOGIC_VECTOR (4 downto 0);
+               WriteRegW_out : out std_logic_vector(4 downto 0);
                ResultW : out STD_LOGIC_VECTOR (31 downto 0));
     end component;
     
@@ -273,12 +280,23 @@ begin
                                FlushM, forwardAE, forwardBE, forwardCE, ResultW, RegWriteM, MemtoRegM, MemWriteM, ALUOutM, WriteDataM, WriteRegM);
     me: mem_stage port  map (rst, clk, RegWriteM, MemtoRegM, MemWriteM, ALUOutM, WriteDataM, WriteRegM, RegWriteW, MemtoRegW, 
                              ReadDataW, ALUOutW, WriteRegW);
-    wbs: writeback_stage port map (RegWriteW, MemtoRegW, ReadDataW, ALUOutw, WriteRegW, ResultW);
+    --wbs: writeback_stage port map (rst, RegWriteW, MemtoRegW, ReadDataW, ALUOutw, WriteRegW, ResultW);
     hazard: hazard_unit port map (BranchD, RsE, RtE, RdE, ALUControlE, ALUSrcE, WriteRegM, MemtoRegM, RegWriteM,
                                   WriteRegW, RegWriteW, StallF, StallD, StallE, FlushE, FlushM, forwardAE, forwardBE, forwardCE);
-    InstrD <= instD;              
+    
+    InstrD <= instD; 
+    WE <= RegWriteW;
+    WA <= WriteRegW;
+    WD <= ResultW;
+    ResultW <= ReadDataW when MemtoRegW = '1' else
+               ALUOutW;
+                 
     ResultW_out <= ResultW;
     ALUOutM_out <= ALUOutM;
     SignImmE_out <= SignImmE;
     InstrD_out <= InstrD;
+    RegWriteW_out <= RegWriteW;
+    WriteRegW_out <= WriteRegW;
+    RegWriteM_out <= RegWriteM;
+    
 end Behavioral;

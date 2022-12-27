@@ -43,16 +43,22 @@ architecture Behavioral of mips_top_tb is
               InstrD_out : out std_logic_vector(31 downto 0);
               SignImmE_out : out std_logic_vector(31 downto 0);
               ALUOutM_out : out std_logic_vector(31 downto 0);
-              ResultW_out : out std_logic_vector(31 downto 0));
+              ResultW_out : out std_logic_vector(31 downto 0);
+              RegWriteW_out : out std_logic;
+              WriteRegW_out : out std_logic_vector(4 downto 0);
+              RegWriteM_out : out std_logic);
    end component;
 
     signal rst : std_logic := '1';
     signal clk: std_logic := '0';
     signal InstrD_out, SignImmE_out, ALUOutM_out, ResultW_out : std_logic_vector(31 downto 0);
+    signal RegWriteW_out : std_logic := '0';
+    signal WriteRegW_out : std_logic_vector(4 downto 0) := "00000";
+    signal RegWriteM_out : std_logic := '0';
     
 begin
 
-    mips: mips_top port map(rst, clk, InstrD_out, SignImmE_out, ALUOutM_out, ResultW_out);
+    mips: mips_top port map(rst, clk, InstrD_out, SignImmE_out, ALUOutM_out, ResultW_out, RegWriteW_out, WriteRegW_out, RegWriteM_out);
     
     process 
     begin
