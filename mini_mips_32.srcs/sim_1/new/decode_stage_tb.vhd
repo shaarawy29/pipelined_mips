@@ -17,7 +17,7 @@ architecture bench of decode_stage_tb is
          WD:in std_logic_vector(31 downto 0); 
          PCPlus1D: in std_logic_vector(31 downto 0);
          WE: in std_logic;
-         ResultW:in std_logic_vector(31 downto 0);
+         --ResultW:in std_logic_vector(31 downto 0);
          PCSrcD: out std_logic;
          RD1E: out std_logic_vector(31 downto 0);
          RD2E: out std_logic_vector(31 downto 0);
@@ -38,7 +38,7 @@ architecture bench of decode_stage_tb is
   end component;
 
   signal rst: std_logic := '1';
-  signal clk: std_logic:='0';
+  signal clk: std_logic:='1';
   signal CLR: std_logic:='0';
   signal nEN: std_logic:='0';
   signal InstrD: std_logic_vector(31 downto 0):=(others=>'0');
@@ -75,7 +75,7 @@ begin
                                WD          => WD,
                                PCPlus1D    => PCPlus1D,
                                WE          => WE,
-                               ResultW     => ResultW,
+                               --ResultW     => ResultW,
                                PCSrcD      => PCSrcD,
                                RD1E        => RD1E,
                                RD2E        => RD2E,
@@ -99,7 +99,12 @@ begin
   
   stimulus: process
   begin
-    rst <= '1'; wait for 5ns; wait;
+    rst <= '1'; wait for 5ns; rst <= '0';
+    nEN <= '0'; InstrD <= "00000000011001011000000000000000"; -- add 3(rs) 5(rt) 16(rd) 
+    WA <= "00000"; WE <= '0'; PCPlus1D <= X"00000001"; WD <= X"0000ffff"; wait for 10ns;
+    InstrD <= "00001000011001010000000000000110"; WA <= "00011"; WE <= '1'; PCPlus1D <= X"00000002"; wait for 10ns;
+    wait;
+    
   end process;
 
 

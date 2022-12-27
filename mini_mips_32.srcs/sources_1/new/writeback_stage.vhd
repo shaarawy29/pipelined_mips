@@ -33,7 +33,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity writeback_stage is
     Port ( RegWriteW : inout STD_LOGIC;
-           MemtoRegW : inout STD_LOGIC;
+           MemtoRegW : in STD_LOGIC;
            ReadDataW : in STD_LOGIC_VECTOR (31 downto 0);
            ALUOutW : in STD_LOGIC_VECTOR (31 downto 0);
            WriteRegW : inout STD_LOGIC_VECTOR (4 downto 0);

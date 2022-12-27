@@ -38,22 +38,31 @@ end mips_top_tb;
 architecture Behavioral of mips_top_tb is
 
     component mips_top is 
-        port (clk : in std_logic;
-              writeresult_out : out std_logic_vector(31 downto 0));
+        port (rst : in std_logic;
+              clk : in std_logic;
+              InstrD_out : out std_logic_vector(31 downto 0);
+              SignImmE_out : out std_logic_vector(31 downto 0);
+              ALUOutM_out : out std_logic_vector(31 downto 0);
+              ResultW_out : out std_logic_vector(31 downto 0));
    end component;
 
+    signal rst : std_logic := '1';
     signal clk: std_logic := '0';
-    signal writeresult_out: std_Logic_vector(31 downto 0) := (others => '0');
+    signal InstrD_out, SignImmE_out, ALUOutM_out, ResultW_out : std_logic_vector(31 downto 0);
     
 begin
 
-process 
-begin
-    clk  <= not clk;
-    wait for 10ns;
-end process;
+    mips: mips_top port map(rst, clk, InstrD_out, SignImmE_out, ALUOutM_out, ResultW_out);
+    
+    process 
+    begin
+        clk  <= not clk; wait for 5ns;
+    end process;
 
-mips: mips_top port map(clk, writeresult_out);
+    process
+    begin
+        rst <= '1'; wait for 23ns; rst <= '0'; wait;
+    end process;
 
 
 end Behavioral;

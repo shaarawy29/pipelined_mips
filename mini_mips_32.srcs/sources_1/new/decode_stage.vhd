@@ -40,7 +40,7 @@ entity decode_stage is
          WD:in std_logic_vector(31 downto 0); 
          PCPlus1D: in std_logic_vector(31 downto 0);
          WE: in std_logic;
-         ResultW:in std_logic_vector;
+         --ResultW:in std_logic_vector;
          PCSrcD: out std_logic;
          RD1E: out std_logic_vector(31 downto 0);
          RD2E: out std_logic_vector(31 downto 0);

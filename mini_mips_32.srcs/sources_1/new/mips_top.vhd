@@ -32,14 +32,19 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity mips_top is
-    Port ( clk : in STD_LOGIC;
-           writeresult_out : out std_logic_vector(31 downto 0));
+    Port ( rst : in std_logic;
+           clk : in STD_LOGIC;
+           InstrD_out : out std_logic_vector(31 downto 0);
+           SignImmE_out : out std_logic_vector(31 downto 0);
+           ALUOutM_out : out std_logic_vector(31 downto 0);
+           ResultW_out : out std_logic_vector(31 downto 0));
 end mips_top;
 
 architecture Behavioral of mips_top is
 
     component fetch_stage is 
-        Port (clk: in std_logic;
+        Port (rst : in std_logic;
+              clk: in std_logic;
               PCBranchD: in std_logic_vector(31 downto 0); --address to jump 
               StallF: in std_logic;
               StallD: in std_logic;
@@ -49,7 +54,8 @@ architecture Behavioral of mips_top is
     end component;
     
     component decode_stage is 
-        Port (clk:in std_logic;
+        Port (rst : in std_logic;
+              clk:in std_logic;
               CLR: in std_logic;
               nEN : in std_logic;
               InstrD:in std_logic_vector(31 downto 0);
@@ -57,7 +63,7 @@ architecture Behavioral of mips_top is
               WD:in std_logic_vector(31 downto 0); 
               PCPlus1D: in std_logic_vector(31 downto 0);
               WE: in std_logic;
-              ResultW:in std_logic_vector;
+              --ResultW:in std_logic_vector;
               PCSrcD: out std_logic;
               RD1E: out std_logic_vector(31 downto 0);
               RD2E: out std_logic_vector(31 downto 0);
@@ -77,7 +83,8 @@ architecture Behavioral of mips_top is
    end component;
    
    component execute_stage is 
-       Port ( clk : in STD_LOGIC;
+       Port ( rst : in std_logic;
+              clk : in STD_LOGIC;
               RegWriteE : in STD_LOGIC;
               MemtoRegE : in STD_LOGIC;
               MemWriteE : in STD_LOGIC;
@@ -107,7 +114,8 @@ architecture Behavioral of mips_top is
    end component;
    
     component mem_stage is 
-        Port ( clk : in STD_LOGIC;
+        Port ( rst : in std_logic;
+               clk : in STD_LOGIC;
                RegWriteM : in STD_LOGIC;
                MemtoRegM : in STD_LOGIC;
                MemWriteM : in STD_LOGIC;
@@ -258,15 +266,19 @@ architecture Behavioral of mips_top is
 
 begin
     
-    fs: fetch_stage port map(clk, PCBranchD, StallF, StallD, PCSrcD, instD, PCPlus1D);
-    ds: decode_stage port map(clk, FlushE, StallE, InstrD, WA, WD, PCPlus1D, WE, ResultW, PCSrcD, RD1E, RD2E, RD3E, RSE, RTE, 
+    fs: fetch_stage port map(rst, clk, PCBranchD, StallF, StallD, PCSrcD, instD, PCPlus1D);
+    ds: decode_stage port map(rst, clk, FlushE, StallE, InstrD, WA, WD, PCPlus1D, WE, PCSrcD, RD1E, RD2E, RD3E, RSE, RTE, 
                               RDE, SignImmE, PCBranchD, BranchD, RegWriteE, MemtoRegE, MemWriteE, ALUControlE, ALUSrcE, RegDstE);
-    es: execute_stage port map(clk, RegWriteE, MemtoRegE, MemWriteE, ALUControlE, ALUSrcE, RegDstE, RD1E, RD2E, RD3E, RsE, RtE, RdE, SignImmE,
+    es: execute_stage port map(rst, clk, RegWriteE, MemtoRegE, MemWriteE, ALUControlE, ALUSrcE, RegDstE, RD1E, RD2E, RD3E, RsE, RtE, RdE, SignImmE,
                                FlushM, forwardAE, forwardBE, forwardCE, ResultW, RegWriteM, MemtoRegM, MemWriteM, ALUOutM, WriteDataM, WriteRegM);
-    me: mem_stage port  map (clk, RegWriteM, MemtoRegM, MemWriteM, ALUOutM, WriteDataM, WriteRegM, RegWriteW, MemtoRegW, 
+    me: mem_stage port  map (rst, clk, RegWriteM, MemtoRegM, MemWriteM, ALUOutM, WriteDataM, WriteRegM, RegWriteW, MemtoRegW, 
                              ReadDataW, ALUOutW, WriteRegW);
     wbs: writeback_stage port map (RegWriteW, MemtoRegW, ReadDataW, ALUOutw, WriteRegW, ResultW);
     hazard: hazard_unit port map (BranchD, RsE, RtE, RdE, ALUControlE, ALUSrcE, WriteRegM, MemtoRegM, RegWriteM,
-                                  WriteRegW, RegWriteW, StallF, StallD, StallE, FlushE, FlushM, forwardAE, forwardBE, forwardCE);                 
-    writeresult_out <= ResultW;
+                                  WriteRegW, RegWriteW, StallF, StallD, StallE, FlushE, FlushM, forwardAE, forwardBE, forwardCE);
+    InstrD <= instD;              
+    ResultW_out <= ResultW;
+    ALUOutM_out <= ALUOutM;
+    SignImmE_out <= SignImmE;
+    InstrD_out <= InstrD;
 end Behavioral;
