@@ -46,6 +46,7 @@ architecture Behavioral of mips_top_tb is
               ResultW_out : out std_logic_vector(31 downto 0);
               RegWriteW_out : out std_logic;
               WriteRegW_out : out std_logic_vector(4 downto 0);
+             -- RD1E_out : out std_logic_vector(31 downto 0);
               RegWriteM_out : out std_logic);
    end component;
 
@@ -55,6 +56,7 @@ architecture Behavioral of mips_top_tb is
     signal RegWriteW_out : std_logic := '0';
     signal WriteRegW_out : std_logic_vector(4 downto 0) := "00000";
     signal RegWriteM_out : std_logic := '0';
+    signal RD1E_out : std_logic_vector(31 downto 0);
     
 begin
 

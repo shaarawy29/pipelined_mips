@@ -54,30 +54,26 @@ end reg_file;
 architecture Behavioral of reg_file is
 
     type reg_file is array (0 to 31) of std_logic_vector(31 downto 0);
-    shared variable reg_file1 : reg_file  := (others => X"00000000");
 
 begin
     
     process(clk, rst) 
+        variable reg_file1 : reg_file  := (others => X"00000000");
     begin 
         if(rst = '1') then
             RD1 <= X"00000000";
             RD2 <= X"00000000";
             RD3 <= X"00000000";
         else 
-           -- if (falling_edge(clk)) then 
-             --   if(WE = '1') then
-               --     reg_file1(to_integer(unsigned(WA))) <= WD; 
-               -- end if;
-           -- end if;
-            
             if (falling_edge(clk)) then
                  if(WE = '1') then
                     reg_file1(to_integer(unsigned(WA))) := WD; 
                 end if;
+                
                 RD1 <= reg_file1(to_integer(unsigned(RA1)));
                 RD2 <= reg_file1(to_integer(unsigned(RA2)));
                 RD3 <= reg_file1(to_integer(unsigned(RA3)));
+                
                 if (RA1 = "00000") then 
                     RD1 <= X"00000000";
                 end if;

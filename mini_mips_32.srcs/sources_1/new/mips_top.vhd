@@ -40,6 +40,7 @@ entity mips_top is
            ResultW_out : out std_logic_vector(31 downto 0);
            RegWriteW_out : out std_logic;
            WriteRegW_out : out std_logic_vector(4 downto 0);
+           --RD1E_out : out std_logic_vector(31 downto 0);
            RegWriteM_out : out std_logic);
 end mips_top;
 
@@ -298,5 +299,7 @@ begin
     RegWriteW_out <= RegWriteW;
     WriteRegW_out <= WriteRegW;
     RegWriteM_out <= RegWriteM;
+    --RD1E_out <= RD1E;
+    
     
 end Behavioral;
