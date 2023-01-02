@@ -100,9 +100,23 @@ begin
   stimulus: process
   begin
     rst <= '1'; wait for 5ns; rst <= '0';
-    nEN <= '0'; InstrD <= "00000000011001011000000000000000"; -- add 3(rs) 5(rt) 16(rd) 
-    WA <= "00000"; WE <= '0'; PCPlus1D <= X"00000001"; WD <= X"0000ffff"; wait for 10ns;
-    InstrD <= "00001000011001010000000000000110"; WA <= "00011"; WE <= '1'; PCPlus1D <= X"00000002"; wait for 10ns;
+    nEN <= '0'; InstrD <= "00000000001000100001100000000000";wait for 10ns;-- add 1(rs) 2(rt) 3(rd) (tested correct)
+    InstrD <= "00000100001000101001100000000000";wait for 10ns;--sub
+    InstrD <= "00001000001000100001100000000000";wait for 10ns;--addi
+    InstrD <= "00001100001000100001100000000000";wait for 10ns;--subi
+    InstrD <= "00010000001000100001100000000000";wait for 10ns;--and
+    InstrD <= "00010100001000100001100000000000";wait for 10ns;--or
+    InstrD <= "00011000001000100001100000000000";wait for 10ns;--lw
+    InstrD <= "00011100001000100001100000000000";wait for 10ns;--sw
+    InstrD <= "00100000001000100001100000000000";wait for 10ns;--weight
+    InstrD <= "00100100001000100001100000000000";wait for 10ns;--ann
+    InstrD <= "00101000001000100001100000000000";wait for 10ns;--beqz
+    WA<="00011";WD<="00101000001000100001100000000000";WE<='1';InstrD <= "00000000001000100001100000000000";wait for 10ns;--testing writing and reading at same clock cycle 
+    --all tested
+    
+    
+    --WA <= "00000"; WE <= '0'; PCPlus1D <= X"00000001"; WD <= X"0000ffff"; wait for 10ns;
+    --InstrD <= "00001000011001010000000000000110"; WA <= "00011"; WE <= '1'; PCPlus1D <= X"00000002"; wait for 10ns;
     wait;
     
   end process;
