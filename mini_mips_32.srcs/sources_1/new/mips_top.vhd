@@ -41,6 +41,9 @@ entity mips_top is
            RegWriteW_out : out std_logic;
            WriteRegW_out : out std_logic_vector(4 downto 0);
            --RD1E_out : out std_logic_vector(31 downto 0);
+           PC_out : out std_logic_vector(31 downto 0);
+           PCSrcD_out : out std_logic;
+           PCBranchD_out : out std_logic_vector(31 downto 0);
            RegWriteM_out : out std_logic);
 end mips_top;
 
@@ -299,6 +302,9 @@ begin
     RegWriteW_out <= RegWriteW;
     WriteRegW_out <= WriteRegW;
     RegWriteM_out <= RegWriteM;
+    PC_out <= PCPlus1D;
+    PCSrcD_out <= PCSrcD;
+    PCBranchD_out <= PCBranchD;
     --RD1E_out <= RD1E;
     
     
